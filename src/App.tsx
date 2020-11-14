@@ -1,26 +1,32 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import './App.css'
+import Rating from './components/Rating'
 
 function App() {
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+    <div>
+      <header>
+        <h1>Rate the Women of Valorant</h1>
       </header>
+
+      <section>
+        <h2>Rank the Women:</h2>
+        <Rating />
+      </section>
+
+      <section>
+        <h2>What the people think:</h2>
+        <p>Based on the average of all the ratings this is what the people think.</p>
+        <Rating />
+      </section>
+
+      <section>
+        <h2>Individual Ratings</h2>
+
+      </section>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

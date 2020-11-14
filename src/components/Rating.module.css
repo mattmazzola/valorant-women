@@ -1,0 +1,35 @@
+.listHeader {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.listHeader > div:first-child {
+  text-align: left;
+}
+
+.listHeader > div:last-child {
+  text-align: right;
+}
+
+
+.list {
+  display: grid;
+  grid-template-columns: repeat(7, 200px);
+  grid-gap: 1em;
+  list-style: none;
+}
+
+.agent {
+  padding: 1em;
+  border: 2px solid grey;
+  border-radius: 2em;
+}
+
+.number {
+  text-align: center;
+  font-size: 2rem;
+}
+
+img {
+  max-width: 200px;
+}
