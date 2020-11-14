@@ -1,0 +1,7 @@
+.ratings .arrow.left {
+    grid-column: 3 / span 2;
+}
+
+.ratings .arrow.right {
+    grid-column: span 2 / -2;
+}

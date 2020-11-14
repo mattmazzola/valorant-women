@@ -1,46 +1,47 @@
 import React from 'react'
 import styles from './Rating.module.css'
+import { agents } from '../constants'
+import { shuffle } from '../utilities'
 
 const Component: React.FC = () => {
 
-    const agentImageUrls = [
-        '/images/Jett.png',
-        '/images/Killjoy.png',
-        '/images/Raze.png',
-        '/images/Reyna.png',
-        '/images/Sage.png',
-        '/images/Skye.png',
-        '/images/Viper.png',
-    ]
+    const shuffledAgents = shuffle(agents)
 
     return (
-        <div>
+        <div className={styles.rating}>
             <header className={styles.listHeader}>
                 <div>
                     Hottest
                 </div>
+                <div className="arrow left"></div>
                 <div>
                     Rank the Women
                 </div>
+                <div className="arrow right"></div>
                 <div>
                     Nottest
                 </div>
             </header>
 
             <ol className={styles.list}>
-                {agentImageUrls.map((url, index) => {
-                    const number = index + 1
-
+                {shuffledAgents.map(agent => {
                     return (
                         <li className={styles.agent}>
-                            <img src={url} />
-                            <div className={styles.number}>{number}</div>
+                            <img src={agent.imageUrl} />
+                            <div className={styles.name}>{agent.name}</div>
                         </li>
                     )
                 })}
             </ol>
+            <div className={styles.ranks}>
+                {Array.from({ length: agents.length }, (_, i) => i + 1)
+                    .map(v => {
+                        return (
+                            <div>{v}</div>
+                        )
+                    })}
+            </div>
         </div>
-
     )
 }
 
