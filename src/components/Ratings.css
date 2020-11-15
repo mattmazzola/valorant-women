@@ -2,12 +2,11 @@
     display: grid;
     grid-template-columns: repeat(9, minmax(max-content, 1fr));
     grid-gap: 1rem;
-
     align-items: center;
 }
 
 .ratings .arrow.left {
-    grid-column: 3 / span 2;
+    grid-column: 4 / span 2;
 }
 
 .ratings .arrow.right {
@@ -16,10 +15,26 @@
 
 .ratings .line {
     grid-column: 1 / -1;
-    border-bottom: 2px solid black;
+    border-bottom: 2px solid var(--red-highlight);
 }
+
 /* 
 .ratings div:nth-child(8n + 1) {
     border-left: 2px solid black;
 } */
 
+.ratings .arrow {
+    border-color: var(--red-highlight);
+}
+
+.ratings .arrow.left::before {
+    border-color: var(--red-highlight);
+    border-top-color: transparent;
+    border-bottom-color: transparent;
+}
+
+.arrow.right::after {
+    border-color: var(--red-highlight);
+    border-top-color: transparent;
+    border-bottom-color: transparent;
+}

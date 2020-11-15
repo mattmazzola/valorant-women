@@ -4,16 +4,16 @@
     --list-bg: rgb(53, 53, 53);
     --agent-bg: rgb(97, 97, 97);
     --ranks-bg: rgb(88, 88, 88);
-    border: 2px solid black;
+    border: 2px solid var(--red-highlight, red);
     border-radius: 1rem;
-    background: var(--rating-bg);
+    background: var(--dark-bg);
     overflow: hidden;
 }
 
 .listHeader {
     display: grid;
     grid-template-columns: max-content 1fr max-content 1fr max-content;
-    /* background: var(--header-bg); */
+    background: var(--red-highlight);
     /* border-top-left-radius: 1rem; */
     /* border-top-right-radius: 1rem; */
     grid-gap: 1em;
@@ -21,6 +21,8 @@
     align-items: center;
 
     font-size: 2rem;
+
+    color: black;
 }
 
 .listHeader>div:first-child {
@@ -39,7 +41,7 @@
     padding: 0.5rem;
     padding-top: calc(0.5rem + 2px);
     margin: 0;
-    background-color: var(--list-bg);
+    background-color: var(--dark-bg);
 }
 
 .ranks {
@@ -56,15 +58,17 @@
 }
 
 .agent {
+    --border-color: rgb(197, 136, 136);
+    --bg: rgb(50, 55, 66);
+
     padding: 1em 0;
-    border: 2px solid grey;
+    border: 2px solid var(--border-color);
     border-radius: .5rem;
-    background-color: var(--agent-bg);
+    background-color: var(--bg);
 }
 
 .agent2 {
     padding: 1em 0;
-    background-color: var(--agent-bg);
 }
 
 .agent2:first-child {
@@ -84,12 +88,22 @@
     font-size: 3rem;
     margin: 1rem 2rem;
     padding: 1rem;
+
+    border: 2px solid var(--red-highlight);
+    border-radius: 0.5rem;
+    color: var(--red-highlight);
+
+    background-color: var(--dark-bg);
 }
 
 .rating-form button {
     font-size: 3rem;
     padding: 1rem;
     border-radius: 0.5rem;
+
+    background-color: var(--red-highlight);
+    border: 2px solid var(--red-highlight);
+    color: var(--dark-bg);
 }
 
 .name {

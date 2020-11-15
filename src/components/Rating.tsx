@@ -71,7 +71,7 @@ const Component: React.FC<Props> = (props) => {
                     </div>
                     <div className="arrow left"></div>
                     <div>
-                        Rank the Women
+                        Sort Order
                     </div>
                     <div className="arrow right"></div>
                     <div>
