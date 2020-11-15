@@ -3,8 +3,22 @@ import './App.css'
 import Rating from './components/Rating'
 import Ratings from './components/Ratings'
 import StaticRating from './components/StaticRating'
+import { Submission } from './models'
 
 function App() {
+
+  const [submissions, setSubmissions]  = React.useState<Submission<number>[]>([
+    {
+      name: 'Matt',
+      rating: [5,2,3,6,1,4,0],
+    }
+  ])
+
+  const onSubmit = (submission: Submission<number>) => {
+    console.log({ submission })
+
+    setSubmissions([...submissions, submission])
+  }
 
   return (
     <div className="center">
@@ -15,7 +29,7 @@ function App() {
       <section>
         <h2>Rank the Women:</h2>
         <p>Who do you find most attractive from Valorant?</p>
-        <Rating />
+        <Rating onSubmit={onSubmit} />
       </section>
 
       <section>
@@ -27,12 +41,7 @@ function App() {
       <section>
         <h2>Individual Ratings</h2>
         <p>Ratings by individual submissions.</p>
-        <Ratings submissions={[
-          {
-            name: 'Matt',
-            rating: [5,2,3,6,1,4,0],
-          }
-        ]} />
+        <Ratings submissions={submissions} />
       </section>
     </div>
   )

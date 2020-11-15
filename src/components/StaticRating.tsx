@@ -12,7 +12,7 @@ const Component: React.FC<Props> = (props) => {
             throw new Error(`Index of agent ouf of bounds`)
         }
 
-        const agent = agents.find((a, i) => i === agentIndex)
+        const agent = agents.find((_, i) => i === agentIndex)
 
         return agent!
     })

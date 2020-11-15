@@ -1,8 +1,4 @@
-export type Agent = {
-    id: string
-    name: string
-    imageUrl: string
-}
+import { Agent } from './models'
 
 export const agents: Agent[] = [
     {
@@ -40,4 +36,12 @@ export const agents: Agent[] = [
         name: 'Viper',
         imageUrl: '/images/Viper.png',
     },
+]
+
+
+export const bannedWords: string[] = [
+    'fuck',
+    'damn',
+    'shit',
+    'bastard',
 ]

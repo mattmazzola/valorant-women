@@ -1,20 +1,11 @@
 import React from 'react'
 import './Ratings.css'
-import { agents, Agent } from '../constants'
+import { agents } from '../constants'
+import { Rating, ResolvedSubmission, Submission, Agent } from '../models'
 
-type Rating<T> = [T, T, T, T, T, T, T]
-type Submission = {
-    name: string
-    rating: Rating<number>
-}
-
-type ResolvedSubmission = {
-    name: string
-    agents: Rating<Agent>
-}
 
 type Props = {
-    submissions: Submission[]
+    submissions: Submission<number>[]
 }
 
 const Component: React.FC<Props> = (props) => {
@@ -25,7 +16,7 @@ const Component: React.FC<Props> = (props) => {
                 throw new Error(`Index of agent ouf of bounds`)
             }
 
-            const agent = agents.find((a, i) => i == agentIndex)
+            const agent = agents.find((_, i) => i === agentIndex)
 
             return agent!
         })

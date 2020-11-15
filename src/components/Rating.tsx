@@ -1,8 +1,9 @@
 import React from 'react'
 import './Rating.css'
-import { agents } from '../constants'
+import { agents, bannedWords } from '../constants'
 import { shuffle } from '../utilities'
 import { DragDropContext, Droppable, Draggable, DropResult, ResponderProvided } from 'react-beautiful-dnd'
+import { Rating, Submission } from '../models'
 
 // a little function to help us with reordering the result
 function reorder<T>(list: T[], startIndex: number, endIndex: number) {
@@ -13,7 +14,11 @@ function reorder<T>(list: T[], startIndex: number, endIndex: number) {
     return result
 }
 
-const Component: React.FC = () => {
+type Props = {
+    onSubmit: (submission: Submission<number>) => void
+}
+
+const Component: React.FC<Props> = (props) => {
     const [shuffledAgents, updateAgents] = React.useState(() => shuffle(agents))
     const onDragEnd = (result: DropResult, provided: ResponderProvided) => {
         if (!result?.destination) {
@@ -33,10 +38,22 @@ const Component: React.FC = () => {
 
     const onSubmitForm = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-        const agentIndices = shuffledAgents.map(agent => agents.findIndex(a => a.id === agent.id))
 
-        console.log({ submissionName, agentIndices, shuffledAgents })
+        const lsub = submissionName.toLowerCase()
+        const bannedWord = bannedWords.find(word => lsub.includes(word))
+        if (bannedWord) {
+            console.error(`Don't be a dick! Submission included banned word: ${bannedWord}`)
+            return
+        }
+
+        const agentIndices = shuffledAgents.map(agent => agents.findIndex(a => a.id === agent.id)) as Rating<number>
+        const rawSubmission: Submission<number> = {
+            name: submissionName,
+            rating: agentIndices,
+        }
+
         setName('')
+        props.onSubmit(rawSubmission)
     }
 
     const onNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
