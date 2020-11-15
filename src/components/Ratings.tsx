@@ -1,5 +1,4 @@
 import React from 'react'
-import styles from './Ratings.module.css'
 import './Ratings.css'
 import { agents, Agent } from '../constants'
 
@@ -38,38 +37,34 @@ const Component: React.FC<Props> = (props) => {
     })
 
     return (
-        <div className={`${styles.ratings} ratings`}>
+        <div className="ratings">
             <b></b>
             <div>
                 Hottest
-                </div>
+            </div>
             <div className="arrow left"></div>
             <div>
                 Sort Order
-                </div>
+            </div>
             <div className="arrow right"></div>
             <div>
                 Nottest
-                </div>
+            </div>
 
             <b></b>
             {Array.from({ length: agents.length }, (_, i) => i + 1)
-                .map(v => {
-                    return (
-                        <div>{v}</div>
-                    )
-                })}
+                .map(v => (
+                    <div key={v}>{v}</div>
+                ))}
 
-            {resolveSubmissions.map(resolvedSubmission => {
+            {resolveSubmissions.map((resolvedSubmission, i) => {
                 return (
-                    <>
-                    <div className={styles.name}>{resolvedSubmission.name}</div>
-                    {resolvedSubmission.agents.map(agent => {
-                        return (
-                            <div>{agent.name}</div>
-                        )
-                    })}
-                    </>
+                    <React.Fragment key={i}>
+                        <div>{resolvedSubmission.name}</div>
+                        {resolvedSubmission.agents.map(agent => (
+                            <div key={agent.id}>{agent.name}</div>
+                        ))}
+                    </React.Fragment>
                 )
             })}
 

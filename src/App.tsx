@@ -14,24 +14,19 @@ function App() {
 
       <section>
         <h2>Rank the Women:</h2>
+        <p>Who do you find most attractive from Valorant?</p>
         <Rating />
-
-        <form action="">
-          <label htmlFor="userName">Name:</label>
-          <input type="text" name="name" id="userName" />
-          <button type="submit" >Submit</button>
-        </form>
       </section>
 
       <section>
-        <h2>What the people think:</h2>
-        <p>Based on the average of all the ratings this is what the people think.</p>
+        <h2>What the People Think:</h2>
+        <p>Based on the average of all the 7234 ratings this is what the people think.</p>
         <StaticRating ratings={[1,4,3,2,0,5,6]} />
       </section>
 
       <section>
         <h2>Individual Ratings</h2>
-
+        <p>Ratings by individual submissions.</p>
         <Ratings submissions={[
           {
             name: 'Matt',

@@ -1,0 +1,102 @@
+.rating {
+    --rating-bg: lightgrey;
+    --header-bg: lightgrey;
+    --list-bg: rgb(53, 53, 53);
+    --agent-bg: rgb(97, 97, 97);
+    --ranks-bg: rgb(88, 88, 88);
+    border: 2px solid black;
+    border-radius: 1rem;
+    background: var(--rating-bg);
+    overflow: hidden;
+}
+
+.listHeader {
+    display: grid;
+    grid-template-columns: max-content 1fr max-content 1fr max-content;
+    /* background: var(--header-bg); */
+    /* border-top-left-radius: 1rem; */
+    /* border-top-right-radius: 1rem; */
+    grid-gap: 1em;
+    padding: 0.5rem 1rem;
+    align-items: center;
+
+    font-size: 2rem;
+}
+
+.listHeader>div:first-child {
+    text-align: left;
+}
+
+.listHeader>div:last-child {
+    text-align: right;
+}
+
+.list {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-gap: .75rem;
+    list-style: none;
+    padding: 0.5rem;
+    padding-top: calc(0.5rem + 2px);
+    margin: 0;
+    background-color: var(--list-bg);
+}
+
+.ranks {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-gap: 1em;
+    justify-content: center;
+    text-align: center;
+    /* background-color: var(--ranks-bg); */
+    /* color: white; */
+    font-size: 4rem;
+    font-weight: bold;
+    padding: 0.5rem;
+}
+
+.agent {
+    padding: 1em;
+    border: 2px solid grey;
+    border-radius: .5rem;
+    background-color: var(--agent-bg);
+}
+
+.agent2 {
+    padding: 1em;
+    background-color: var(--agent-bg);
+}
+
+.agent2:first-child {
+    border-bottom-left-radius: 0.5rem;
+}
+
+.agent2:last-child {
+    border-bottom-right-radius: 0.5rem;
+}
+
+.rating-form {
+    font-size: 3rem;
+}
+
+.rating-form input {
+    font-size: 3rem;
+    margin: 1rem 2rem;
+    padding: 1rem;
+}
+
+.rating-form button {
+    font-size: 3rem;
+    padding: 1rem;
+    border-radius: 0.5rem;
+}
+
+.name {
+    text-align: center;
+    font-size: 2rem;
+    color: lightgray;
+}
+
+img {
+    max-width: calc(100vw / 10);
+}

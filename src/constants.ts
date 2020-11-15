@@ -6,37 +6,37 @@ export type Agent = {
 
 export const agents: Agent[] = [
     {
-        id: '',
+        id: 'Jett',
         name: 'Jett',
         imageUrl: '/images/Jett.png',
     },
     {
-        id: '',
+        id: 'Killjoy',
         name: 'Killjoy',
         imageUrl: '/images/Killjoy.png',
     },
     {
-        id: '',
+        id: 'Raze',
         name: 'Raze',
         imageUrl: '/images/Raze.png',
     },
     {
-        id: '',
+        id: 'Reyna',
         name: 'Reyna',
         imageUrl: '/images/Reyna.png',
     },
     {
-        id: '',
+        id: 'Sage',
         name: 'Sage',
         imageUrl: '/images/Sage.png',
     },
     {
-        id: '',
+        id: 'Skye',
         name: 'Skye',
         imageUrl: '/images/Skye.png',
     },
     {
-        id: '',
+        id: 'Viper',
         name: 'Viper',
         imageUrl: '/images/Viper.png',
     },

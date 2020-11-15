@@ -1,5 +1,4 @@
 import React from 'react'
-import styles from './StaticRating.module.css'
 import { agents } from '../constants'
 
 type Props = {
@@ -13,14 +12,14 @@ const Component: React.FC<Props> = (props) => {
             throw new Error(`Index of agent ouf of bounds`)
         }
 
-        const agent = agents.find((a, i) => i == agentIndex)
+        const agent = agents.find((a, i) => i === agentIndex)
 
         return agent!
     })
 
     return (
-        <div className={styles.rating}>
-            <header className={styles.listHeader}>
+        <div className="rating">
+            <header className="listHeader">
                 <div>
                     Hottest
                 </div>
@@ -34,24 +33,27 @@ const Component: React.FC<Props> = (props) => {
                 </div>
             </header>
 
-            <div className={styles.ranks}>
+            <div className="ranks">
                 {Array.from({ length: agents.length }, (_, i) => i + 1)
-                    .map(v => {
-                        return (
-                            <div>{v}</div>
-                        )
-                    })}
+                    .map(v => (
+                        <div key={v}>{v}</div>
+                    ))}
             </div>
 
-            <ol className={styles.list}>
-                {chosenAgentList.map(agent => {
-                    return (
-                        <li className={styles.agent}>
-                            <img src={agent.imageUrl}  alt={agent.name}/>
-                            <div className={styles.number}>{agent.name}</div>
-                        </li>
-                    )
-                })}
+            <ol className="list">
+                {chosenAgentList.map(agent => (
+                    <li className="agent2" key={agent.id}>
+                        <img
+                            src={agent.imageUrl}
+                            alt={agent.name}
+                            onMouseDown={(e) => {
+                                e.preventDefault()
+                                // other code
+                            }}
+                        />
+                        <div className="name">{agent.name}</div>
+                    </li>
+                ))}
             </ol>
 
 
