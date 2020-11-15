@@ -56,14 +56,14 @@
 }
 
 .agent {
-    padding: 1em;
+    padding: 1em 0;
     border: 2px solid grey;
     border-radius: .5rem;
     background-color: var(--agent-bg);
 }
 
 .agent2 {
-    padding: 1em;
+    padding: 1em 0;
     background-color: var(--agent-bg);
 }
 
@@ -98,6 +98,6 @@
     color: lightgray;
 }
 
-img {
-    max-width: calc(100vw / 10);
+.list img {
+    max-width: calc(100vw / 9);
 }

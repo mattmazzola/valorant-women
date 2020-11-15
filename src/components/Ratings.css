@@ -1,6 +1,6 @@
 .ratings {
     display: grid;
-    grid-template-columns: repeat(8, minmax(max-content, 1fr));
+    grid-template-columns: repeat(9, minmax(max-content, 1fr));
     grid-gap: 1rem;
 
     align-items: center;
@@ -13,4 +13,13 @@
 .ratings .arrow.right {
     grid-column: span 2 / -2;
 }
+
+.ratings .line {
+    grid-column: 1 / -1;
+    border-bottom: 2px solid black;
+}
+/* 
+.ratings div:nth-child(8n + 1) {
+    border-left: 2px solid black;
+} */
 

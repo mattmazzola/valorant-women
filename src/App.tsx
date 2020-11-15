@@ -17,14 +17,17 @@ function App() {
   const [submissions, setSubmissions] = React.useState<Submission<string>[]>([
     {
       name: 'Matt',
+      datetime: 1605430818981,
       rating: ['Jett', 'Killjoy', 'Raze', 'Reyna', 'Sage', 'Skye', 'Viper'],
     },
     {
       name: 'Colton',
+      datetime: 1605430818981,
       rating: ['Killjoy', 'Jett', 'Skye', 'Reyna', 'Raze', 'Viper', 'Sage'],
     },
     {
       name: 'Rance',
+      datetime: 1605430818981,
       rating: ['Skye', 'Jett', 'Killjoy', 'Reyna', 'Raze', 'Sage', 'Viper'],
     },
   ])

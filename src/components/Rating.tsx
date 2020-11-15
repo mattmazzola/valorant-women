@@ -49,6 +49,7 @@ const Component: React.FC<Props> = (props) => {
         const agentNames = manuallySortedAgents.map(agent => agent.id)
         const rawSubmission: Submission<string> = {
             name: submissionName,
+            datetime: Date.now(),
             rating: agentNames,
         }
 
