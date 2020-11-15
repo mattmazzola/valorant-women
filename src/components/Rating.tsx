@@ -98,7 +98,7 @@ const Component: React.FC<Props> = (props) => {
                                                 {...draggableProvided.draggableProps}
                                                 {...draggableProvided.dragHandleProps}
                                             >
-                                                <img src={agent.imageUrl} />
+                                                <img src={agent.imageUrl} alt={agent.name}/>
                                                 <div className="name">{agent.name}</div>
                                             </li>
                                         )}
