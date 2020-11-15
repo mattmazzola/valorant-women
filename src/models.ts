@@ -1,13 +1,12 @@
-export type Rating<T> = [T, T, T, T, T, T, T]
 
 export type Submission<T> = {
     name: string
-    rating: Rating<T>
+    rating: T[]
 }
 
 export type ResolvedSubmission = {
     name: string
-    agents: Rating<Agent>
+    agents: Agent[]
 }
 
 export type Agent = {

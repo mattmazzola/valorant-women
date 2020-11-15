@@ -1,29 +1,21 @@
 import React from 'react'
 import './Ratings.css'
 import { agents } from '../constants'
-import { Rating, ResolvedSubmission, Submission, Agent } from '../models'
-
+import { ResolvedSubmission, Submission, Agent } from '../models'
+import { convertNamesToAgents } from '../utilities'
 
 type Props = {
-    submissions: Submission<number>[]
+    submissions: Submission<string>[]
 }
 
 const Component: React.FC<Props> = (props) => {
 
     const resolveSubmissions = props.submissions.map<ResolvedSubmission>(submission => {
-        const chosenAgentList = submission.rating.map<Agent>(agentIndex => {
-            if (agentIndex < 0 || agentIndex > agents.length - 1) {
-                throw new Error(`Index of agent ouf of bounds`)
-            }
-
-            const agent = agents.find((_, i) => i === agentIndex)
-
-            return agent!
-        })
+        const chosenAgentList = convertNamesToAgents(submission.rating, agents)
 
         return {
             name: submission.name,
-            agents: chosenAgentList as Rating<Agent>
+            agents: chosenAgentList
         }
     })
 

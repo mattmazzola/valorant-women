@@ -1,21 +1,14 @@
 import React from 'react'
 import { agents } from '../constants'
+import { convertNamesToAgents } from '../utilities'
 
 type Props = {
-    ratings: [number, number, number, number, number, number, number]
+    sortedAgentNames: string[]
 }
 
 const Component: React.FC<Props> = (props) => {
 
-    const chosenAgentList = props.ratings.map(agentIndex => {
-        if (agentIndex < 0 || agentIndex > agents.length - 1) {
-            throw new Error(`Index of agent ouf of bounds`)
-        }
-
-        const agent = agents.find((_, i) => i === agentIndex)
-
-        return agent!
-    })
+    const chosenAgentList = convertNamesToAgents(props.sortedAgentNames, agents)
 
     return (
         <div className="rating">

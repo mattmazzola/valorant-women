@@ -4,17 +4,54 @@ import Rating from './components/Rating'
 import Ratings from './components/Ratings'
 import StaticRating from './components/StaticRating'
 import { Submission } from './models'
+import { agents } from './constants'
+import { convertNamesToAgents } from './utilities'
+
+const zeroRatings = agents.reduce<Record<string, number>>((aggregate, agent) => {
+  aggregate[agent.name] = 0
+  return aggregate
+}, {})
 
 function App() {
 
-  const [submissions, setSubmissions]  = React.useState<Submission<number>[]>([
+  const [submissions, setSubmissions] = React.useState<Submission<string>[]>([
     {
       name: 'Matt',
-      rating: [5,2,3,6,1,4,0],
-    }
+      rating: ['Jett', 'Killjoy', 'Raze', 'Reyna', 'Sage', 'Skye', 'Viper'],
+    },
+    {
+      name: 'Colton',
+      rating: ['Killjoy', 'Jett', 'Skye', 'Reyna', 'Raze', 'Viper', 'Sage'],
+    },
+    {
+      name: 'Rance',
+      rating: ['Skye', 'Jett', 'Killjoy', 'Reyna', 'Raze', 'Sage', 'Viper'],
+    },
   ])
 
-  const onSubmit = (submission: Submission<number>) => {
+  const totalRatings = submissions.reduce((totals, submission) => {
+    const ratedAgents = convertNamesToAgents(submission.rating, agents)
+
+    for (const [i, a] of ratedAgents.entries()) {
+      totals[a.id] += i
+    }
+
+    return totals
+  }, { ...zeroRatings })
+
+  const avgRatings = { ...totalRatings }
+  Object.entries(avgRatings)
+    .forEach(([key, value]) => {
+      avgRatings[key] = value / submissions.length
+    })
+
+  const avgRatingNames = Object.entries(avgRatings)
+    .sort(([key1, v1], [key2, v2]) => v1 - v2)
+    .map(([key]) => key)
+
+  console.log(avgRatingNames)
+
+  const onSubmit = (submission: Submission<string>) => {
     console.log({ submission })
 
     setSubmissions([...submissions, submission])
@@ -35,7 +72,7 @@ function App() {
       <section>
         <h2>What the People Think:</h2>
         <p>Based on the average of all the 7234 ratings this is what the people think.</p>
-        <StaticRating ratings={[1,4,3,2,0,5,6]} />
+        <StaticRating sortedAgentNames={avgRatingNames} />
       </section>
 
       <section>

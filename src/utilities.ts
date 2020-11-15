@@ -1,3 +1,5 @@
+import { Agent } from "./models"
+
 export function shuffle<T>(xs: T[]): T[] {
 
     // Copy to prevent mutation of input
@@ -14,4 +16,17 @@ export function shuffle<T>(xs: T[]): T[] {
     }
 
     return shuffled
+}
+
+export function convertNamesToAgents(agentNames: string[], agents: Agent[]): Agent[] {
+    const chosenAgentList = agentNames.map<Agent>(agentName => {
+        const agent = agents.find(a => a.name === agentName)
+        if (!agent) {
+            throw new Error(`Agent of name ${agentName} was not found`)
+        }
+
+        return agent
+    })
+
+    return chosenAgentList
 }

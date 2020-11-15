@@ -3,7 +3,7 @@ import './Rating.css'
 import { agents, bannedWords } from '../constants'
 import { shuffle } from '../utilities'
 import { DragDropContext, Droppable, Draggable, DropResult, ResponderProvided } from 'react-beautiful-dnd'
-import { Rating, Submission } from '../models'
+import { Submission } from '../models'
 
 // a little function to help us with reordering the result
 function reorder<T>(list: T[], startIndex: number, endIndex: number) {
@@ -15,23 +15,23 @@ function reorder<T>(list: T[], startIndex: number, endIndex: number) {
 }
 
 type Props = {
-    onSubmit: (submission: Submission<number>) => void
+    onSubmit: (submission: Submission<string>) => void
 }
 
 const Component: React.FC<Props> = (props) => {
-    const [shuffledAgents, updateAgents] = React.useState(() => shuffle(agents))
+    const [manuallySortedAgents, updateManuallySortedAgents] = React.useState(() => shuffle(agents))
     const onDragEnd = (result: DropResult, provided: ResponderProvided) => {
         if (!result?.destination) {
             return
         }
 
         const reorderedAgents = reorder(
-            shuffledAgents,
+            manuallySortedAgents,
             result.source.index,
             result.destination.index
         )
 
-        updateAgents(reorderedAgents)
+        updateManuallySortedAgents(reorderedAgents)
     }
 
     const [submissionName, setName] = React.useState('')
@@ -46,10 +46,10 @@ const Component: React.FC<Props> = (props) => {
             return
         }
 
-        const agentIndices = shuffledAgents.map(agent => agents.findIndex(a => a.id === agent.id)) as Rating<number>
-        const rawSubmission: Submission<number> = {
+        const agentNames = manuallySortedAgents.map(agent => agent.id)
+        const rawSubmission: Submission<string> = {
             name: submissionName,
-            rating: agentIndices,
+            rating: agentNames,
         }
 
         setName('')
@@ -88,7 +88,7 @@ const Component: React.FC<Props> = (props) => {
                     {(provided) => {
                         return (
                             <ol className="list" {...provided.droppableProps} ref={provided.innerRef}>
-                                {shuffledAgents.map((agent, index) => (
+                                {manuallySortedAgents.map((agent, index) => (
                                     <Draggable key={agent.id} draggableId={agent.id} index={index}>
                                         {(draggableProvided) => (
                                             <li
