@@ -1,0 +1,16 @@
+POST http://localhost:3002/ratings
+Accept: application/json
+Content-Type: application/json
+
+{
+    "username": "Matt",
+    "names": [
+        "jett",
+        "killjoy",
+        "skye",
+        "raze",
+        "sage",
+        "reyna",
+        "viper"
+    ]
+}

@@ -3,7 +3,7 @@ import * as fastify from "fastify"
 import fp from "fastify-plugin"
 import * as TORM from "typeorm"
 
-const ormPlugin: fastify.FastifyPluginCallback = async (instance, pluginOptions, done) => {
+const plugin: fastify.FastifyPluginCallback = async (instance, pluginOptions, done) => {
     const connectionOptions = await TORM.getConnectionOptions()
     if (connectionOptions.type !== "mssql") {
         throw Error(`Connection options type did not match database type.`)
@@ -48,4 +48,4 @@ declare module 'fastify' {
     }
 }
 
-export default fp(ormPlugin)
+export default fp(plugin)

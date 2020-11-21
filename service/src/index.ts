@@ -1,7 +1,9 @@
 import "reflect-metadata"
 import fastify from "fastify"
+import fastifyCors from "fastify-cors"
 import dotenv from "dotenv"
-import ormPlugin from "./plugins/orm"
+import plugin from "./plugins/orm"
+import ratings from './routes/ratings'
 
 dotenv.config()
 
@@ -25,13 +27,20 @@ async function main() {
         caseSensitive: false,
     })
 
-    server.register(ormPlugin)
+    server.register(plugin)
         .after(err => {
             if (err) throw err
         })
 
+    server.register(fastifyCors)
+    server.register(ratings, { prefix: '/ratings' })
+
+    server.get('/routes', async () => {
+        return server.printRoutes()
+    })
+
     server.get('/', async (request, reply) => {
-        return { hello: 'world' }
+        return `Women of Valorant server running... ${new Date().toLocaleDateString('en-us')}`
     })
 
     try {
