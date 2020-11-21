@@ -97,7 +97,7 @@ const Component: React.FC<Props> = (props) => {
                                                 {...draggableProvided.draggableProps}
                                                 {...draggableProvided.dragHandleProps}
                                             >
-                                                <img src={agent.imageUrl} alt={agent.name}/>
+                                                <img src={agent.imageUrl} alt={agent.name} />
                                                 <div className="name">{agent.name}</div>
                                             </li>
                                         )}
@@ -111,7 +111,18 @@ const Component: React.FC<Props> = (props) => {
             </div>
             <form onSubmit={onSubmitForm} className="rating-form">
                 <label htmlFor="userName">Name:</label>
-                <input type="text" name="name" id="userName" placeholder="Enter name" value={submissionName} onChange={onNameChange} required />
+                <input
+                    type="text"
+                    name="name"
+                    id="userName"
+                    placeholder="Enter name"
+                    title="Don't be a dick"
+                    minLength={4}
+                    maxLength={20}
+                    value={submissionName}
+                    onChange={onNameChange}
+                    required
+                />
                 <button type="submit" >Submit</button>
             </form>
 
