@@ -39,6 +39,7 @@ exit Bash
 #### 2.e Create Type ORM Connection file
 
 - Create `ormconfig.json` in root of project
+   - This holds the connection info loaded by Type ORM
 - Enter database type as `mssql`
 - Enter username and password matching those above
 
@@ -48,6 +49,22 @@ exit Bash
    "host": "localhost",
    "username": "SA",
    "password": "<YourStrong@Passw0rd>",
+}
+```
+
+### Schema Changes
+
+If you change the @Entities defined an "synchronize" is enabled, when the service starts it will attempt to alter the databases to match the new schema which can sometimes fail.  You can uncomment the "dropSchema" attribute to reset the db / tables and start fresh to get past these errors.
+
+`plugings/orm.ts`
+
+```typescript
+{
+   ...
+   synchronize: true,
+   // dropSchema: true,
+   logging: ["error"],
+   ...
 }
 ```
 

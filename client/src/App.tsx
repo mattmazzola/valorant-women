@@ -3,40 +3,41 @@ import './App.css'
 import Rating from './components/Rating'
 import Ratings from './components/Ratings'
 import StaticRating from './components/StaticRating'
-import { Submission } from './models'
+import { Submission, SavedSubmission } from './models'
 import { agents } from './constants'
-import { convertNamesToAgents } from './utilities'
+import { getRatings, postRating } from './client'
 
 const zeroRatings = agents.reduce<Record<string, number>>((aggregate, agent) => {
-  aggregate[agent.name] = 0
+  aggregate[agent.id] = 0
   return aggregate
 }, {})
 
 function App() {
 
-  const [submissions, setSubmissions] = React.useState<Submission<string>[]>([
-    {
-      name: 'Matt',
-      datetime: 1605430818981,
-      rating: ['Jett', 'Killjoy', 'Reyna', 'Sage', 'Skye', 'Raze', 'Viper'],
-    },
-    {
-      name: 'Colton',
-      datetime: 1605430818981,
-      rating: ['Killjoy', 'Viper', 'Reyna', 'Sage', 'Jett', 'Raze', 'Skye'],
-    },
-    {
-      name: 'Rance',
-      datetime: 1605430818981,
-      rating: ['Skye', 'Jett', 'Killjoy', 'Raze', 'Sage', 'Reyna', 'Viper'],
-    },
-  ])
+  const [submissions, setSubmissions] = React.useState<SavedSubmission[]>([])
+
+  React.useEffect(() => {
+    let isMounted = true
+
+    async function loadRatings() {
+      const ratings = await getRatings()
+
+      if (isMounted) {
+        setSubmissions(ratings)
+      }
+    }
+
+    loadRatings()
+
+    return () => {
+      isMounted = false
+    }
+  }, [])
 
   const totalRatings = submissions.reduce((totals, submission) => {
-    const ratedAgents = convertNamesToAgents(submission.rating, agents)
 
-    for (const [i, a] of ratedAgents.entries()) {
-      totals[a.id] += i
+    for (const [i, a] of submission.rankedAgentNames.entries()) {
+      totals[a] += i
     }
 
     return totals
@@ -52,12 +53,12 @@ function App() {
     .sort(([key1, v1], [key2, v2]) => v1 - v2)
     .map(([key]) => key)
 
-  console.log(avgRatingNames)
+  const onSubmit = async (submission: Submission) => {
 
-  const onSubmit = (submission: Submission<string>) => {
-    console.log({ submission })
+    const savedSubmission = await postRating(submission)
+    console.log({ submission, savedSubmission })
 
-    setSubmissions([...submissions, submission])
+    setSubmissions([...submissions, savedSubmission])
   }
 
   return (

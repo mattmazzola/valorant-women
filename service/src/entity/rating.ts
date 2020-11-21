@@ -10,8 +10,8 @@ export class Rating {
     createdAt: Date
 
     @Column()
-    username: string
+    userName: string
 
     @Column("simple-array")
-    names: string[]
+    rankedAgentNames: string[]
 }

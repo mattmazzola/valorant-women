@@ -1,38 +1,39 @@
 import { Agent } from './models'
 
+// The 'id's of these must match the ids on the server since they are matched by string
 export const agents: Agent[] = [
     {
-        id: 'Jett',
+        id: 'jett',
         name: 'Jett',
         imageUrl: '/images/Jett.png',
     },
     {
-        id: 'Killjoy',
+        id: 'killjoy',
         name: 'Killjoy',
         imageUrl: '/images/Killjoy.png',
     },
     {
-        id: 'Raze',
+        id: 'raze',
         name: 'Raze',
         imageUrl: '/images/Raze.png',
     },
     {
-        id: 'Reyna',
+        id: 'reyna',
         name: 'Reyna',
         imageUrl: '/images/Reyna.png',
     },
     {
-        id: 'Sage',
+        id: 'sage',
         name: 'Sage',
         imageUrl: '/images/Sage.png',
     },
     {
-        id: 'Skye',
+        id: 'skye',
         name: 'Skye',
         imageUrl: '/images/Skye.png',
     },
     {
-        id: 'Viper',
+        id: 'viper',
         name: 'Viper',
         imageUrl: '/images/Viper.png',
     },

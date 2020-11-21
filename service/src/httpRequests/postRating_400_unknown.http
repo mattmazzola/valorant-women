@@ -7,10 +7,10 @@ Content-Type: application/json
     "rankedAgentNames": [
         "jett",
         "killjoy",
-        "skye",
         "raze",
-        "sage",
         "reyna",
-        "viper"
+        "skye",
+        "sage",
+        "unknown"
     ]
 }

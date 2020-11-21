@@ -3,8 +3,8 @@ Accept: application/json
 Content-Type: application/json
 
 {
-    "username": "Matt",
-    "names": [
+    "userName": "Matt",
+    "rankedAgentNames": [
         "PlayerOne",
         "PlayerOne",
         "PlayerOne",

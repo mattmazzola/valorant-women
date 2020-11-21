@@ -25,8 +25,8 @@ const plugin: fastify.FastifyPluginCallback = (fastify, pluginOptions, done) => 
         async (req, rep) => {
             const ratingInput = req.body as models.rating.Input
 
-            const containsAllAgenths = constants.agents.every(agent => ratingInput.names.includes(agent))
-            if (!containsAllAgenths) {
+            const containsAllAgents = constants.agents.every(agent => ratingInput.rankedAgentNames.includes(agent))
+            if (!containsAllAgents) {
                 rep.code(400)
 
                 return {
@@ -37,8 +37,8 @@ const plugin: fastify.FastifyPluginCallback = (fastify, pluginOptions, done) => 
             }
 
             const ratingEntity = new Rating()
-            ratingEntity.username = ratingInput.username
-            ratingEntity.names = ratingInput.names
+            ratingEntity.userName = ratingInput.userName
+            ratingEntity.rankedAgentNames = ratingInput.rankedAgentNames
 
             const savedRating = await connection.manager.save(ratingEntity)
 

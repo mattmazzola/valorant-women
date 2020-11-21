@@ -20,7 +20,7 @@ export function shuffle<T>(xs: T[]): T[] {
 
 export function convertNamesToAgents(agentNames: string[], agents: Agent[]): Agent[] {
     const chosenAgentList = agentNames.map<Agent>(agentName => {
-        const agent = agents.find(a => a.name === agentName)
+        const agent = agents.find(a => a.id === agentName)
         if (!agent) {
             throw new Error(`Agent of name ${agentName} was not found`)
         }

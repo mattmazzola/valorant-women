@@ -1,11 +1,11 @@
 import React from 'react'
 import './Ratings.css'
 import { agents } from '../constants'
-import { ResolvedSubmission, Submission } from '../models'
+import { Resolved, SavedSubmission, Submission } from '../models'
 import { convertNamesToAgents } from '../utilities'
 
 type Props = {
-    submissions: Submission<string>[]
+    submissions: SavedSubmission[]
 }
 
 const datetimeOptions: Intl.DateTimeFormatOptions = {
@@ -16,13 +16,14 @@ const datetimeOptions: Intl.DateTimeFormatOptions = {
 }
 const Component: React.FC<Props> = (props) => {
 
-    const resolveSubmissions = props.submissions.map<ResolvedSubmission>(submission => {
-        const chosenAgentList = convertNamesToAgents(submission.rating, agents)
+    const resolveSubmissions = props.submissions.map<Resolved<SavedSubmission>>(submission => {
+        const chosenAgentList = convertNamesToAgents(submission.rankedAgentNames, agents)
 
         return {
-            name: submission.name,
-            datetime: submission.datetime,
-            agents: chosenAgentList,
+            id: submission.id,
+            userName: submission.userName,
+            createdAt: submission.createdAt,
+            rankedAgents: chosenAgentList,
         }
     })
 
@@ -54,9 +55,9 @@ const Component: React.FC<Props> = (props) => {
             {resolveSubmissions.map((resolvedSubmission, i) => {
                 return (
                     <React.Fragment key={i}>
-                        <div>{resolvedSubmission.name}</div>
-                        <div>{new Date(resolvedSubmission.datetime).toLocaleDateString('en-us', datetimeOptions)}</div>
-                        {resolvedSubmission.agents.map(agent => (
+                        <div>{resolvedSubmission.userName}</div>
+                        <div>{new Date(resolvedSubmission.createdAt).toLocaleDateString('en-us', datetimeOptions)}</div>
+                        {resolvedSubmission.rankedAgents.map(agent => (
                             <div key={agent.id}>{agent.name}</div>
                         ))}
                     </React.Fragment>

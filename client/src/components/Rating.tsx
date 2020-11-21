@@ -15,7 +15,7 @@ function reorder<T>(list: T[], startIndex: number, endIndex: number) {
 }
 
 type Props = {
-    onSubmit: (submission: Submission<string>) => void
+    onSubmit: (submission: Submission) => void
 }
 
 const Component: React.FC<Props> = (props) => {
@@ -47,10 +47,9 @@ const Component: React.FC<Props> = (props) => {
         }
 
         const agentNames = manuallySortedAgents.map(agent => agent.id)
-        const rawSubmission: Submission<string> = {
-            name: submissionName,
-            datetime: Date.now(),
-            rating: agentNames,
+        const rawSubmission: Submission = {
+            userName: submissionName,
+            rankedAgentNames: agentNames,
         }
 
         setName('')
