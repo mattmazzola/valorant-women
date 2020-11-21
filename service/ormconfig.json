@@ -1,0 +1,23 @@
+{
+    "type": "mssql",
+    "host": "localhost",
+    "username": "SA",
+    "password": "<YourStrong@Passw0rd>",
+    "database": "tempdb",
+    "synchronize": true,
+    "logging": false,
+    "entities": [
+       "src/entity/**/*.ts"
+    ],
+    "migrations": [
+       "src/migration/**/*.ts"
+    ],
+    "subscribers": [
+       "src/subscriber/**/*.ts"
+    ],
+    "cli": {
+       "entitiesDir": "src/entity",
+       "migrationsDir": "src/migration",
+       "subscribersDir": "src/subscriber"
+    }
+ }
