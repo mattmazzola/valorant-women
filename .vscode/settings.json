@@ -1,4 +1,10 @@
 // Place your settings in this file to overwrite default and user settings.
 {
     "typescript.tsdk": "service/node_modules/typescript/lib",
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/dbe085e6-4448-4069-ab44-483eafb5c59b/resourceGroups/valorant/providers/Microsoft.Web/sites/womenofvalorant",
+    "appService.deploySubpath": "service"
 }

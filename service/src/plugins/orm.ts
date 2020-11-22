@@ -6,22 +6,21 @@ import dotenv from "dotenv"
 
 dotenv.config()
 
-const defaultConnection = 'local'
-const connectionName = process.env.DB_CONNECTION_NAME ?? defaultConnection
-
 const plugin: fastify.FastifyPluginCallback = async (instance, pluginOptions, done) => {
-    const connectionOptions = await TORM.getConnectionOptions(connectionName)
-    if (connectionOptions.type !== "mssql") {
-        throw Error(`Connection options type did not match database type.`)
-    }
 
-    instance.log.info(`Connecting to servier: ${connectionOptions.host} username: ${connectionOptions.username} database: ${connectionOptions.database}`)
+    const host = process.env.TYPEORM_HOST ?? "localhost"
+    const username = process.env.TYPEORM_USERNAME ?? "SA"
+    const password = process.env.TYPEORM_PASSWORD ?? "<YourStrong@Passw0rd>"
+    const database = process.env.TYPEORM_DATABASE ?? "womenofvalorant"
+
+    instance.log.info(`Connecting to server: ${host} username: ${username} database: ${database}`)
+
     const connection = await TORM.createConnection({
-        type: connectionOptions.type,
-        host: connectionOptions.host,
-        username: connectionOptions.username,
-        password: process.env.DB_PASSWORD ?? connectionOptions.password,
-        database: connectionOptions.database,
+        type: "mssql",
+        host,
+        username,
+        password,
+        database,
 
         maxQueryExecutionTime: 1000,
         synchronize: true,

@@ -11,6 +11,7 @@ process.on('unhandledRejection', error => {
     throw error
 })
 
+const hostname = '0.0.0.0'
 const defaultPort = 3002
 const port = process.env.PORT ?? defaultPort
 
@@ -42,7 +43,7 @@ async function main() {
     })
 
     try {
-        await server.listen(port)
+        await server.listen(port, hostname)
     } catch (err) {
         server.log.error(err)
         process.exit(1)

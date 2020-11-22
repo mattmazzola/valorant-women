@@ -33,8 +33,8 @@ GO
 
 #### 2.d Exit terminals
 
-exit T-SQL
-exit Bash
+- exit T-SQL
+- exit Bash
 
 #### 2.e Create Type ORM Connection file
 
@@ -53,6 +53,14 @@ exit Bash
 }
 ```
 
+### Restarting the Database
+
+If you ever stop the container you can start it back up by simply starting it instead attempting to build and pull the images
+
+```
+docker start sql1
+```
+
 ### Schema Changes
 
 If you change the @Entities defined an "synchronize" is enabled, when the service starts it will attempt to alter the databases to match the new schema which can sometimes fail.  You can uncomment the "dropSchema" attribute to reset the db / tables and start fresh to get past these errors.
@@ -69,6 +77,19 @@ If you change the @Entities defined an "synchronize" is enabled, when the servic
 }
 ```
 
+# Listening Address
+
+🚨 Important: The listening address MUST be 0.0.0.0 for deployment to docker containers in Azure
+
+localhost or 127.0.0.1 will NOT be exposed.
+
+> If the port value matches what is in this log entry: "did not start within the expected time limit. Elapsed time ", to what is in code, check the Listen IP address for the code. If the code is listening on localhost or 127.0.0.1, then it will not be accessible outside that specific container, hence, the app will fail to start. To get past this, make the app code listen on 0.0.0.0
+
+See: https://stackoverflow.com/questions/52823025/azure-container-did-not-start-within-expected-time-webapp
+
+# Note
+
+Could not get the `ormconfig.json` to be recognized in Azure so it uses environment variables
 # Links
 
 ## MS SQL
