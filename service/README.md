@@ -27,7 +27,7 @@ docker exec -it sql1 "bash"
 #### 2.c Create database
 
 ```sql
-CREATE DATABASE sc2iq
+CREATE DATABASE womenofvalorant
 GO
 ```
 
@@ -49,6 +49,7 @@ exit Bash
    "host": "localhost",
    "username": "SA",
    "password": "<YourStrong@Passw0rd>",
+   "database": "womenofvalorant"
 }
 ```
 
@@ -72,7 +73,8 @@ If you change the @Entities defined an "synchronize" is enabled, when the servic
 
 ## MS SQL
 
-- https://stackoverflow.com/questions/47984603/using-sql-server-management-studio-to-remote-connect-to-docker-container
+- [SQL Server Management Studio](https://docs.microsoft.com/en-us/sql/ssms/sql-server-management-studio-ssms)
+- [Using SQL Server Management Studio to remote connect to docker container](https://stackoverflow.com/questions/47984603/using-sql-server-management-studio-to-remote-connect-to-docker-container)
 - https://docs.microsoft.com/en-us/dotnet/architecture/microservices/multi-container-microservice-net-applications/database-server-container
 - https://hub.docker.com/_/microsoft-mssql-server
 - https://docs.microsoft.com/en-us/sql/linux/quickstart-install-connect-docker?view=sql-server-ver15&pivots=cs1-powershell

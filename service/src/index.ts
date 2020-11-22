@@ -12,9 +12,7 @@ process.on('unhandledRejection', error => {
 })
 
 const defaultPort = 3002
-const port = process.env.PORT
-    ? parseInt(process.env.PORT)
-    : defaultPort
+const port = process.env.PORT ?? defaultPort
 
 async function main() {
 
