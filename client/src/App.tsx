@@ -3,6 +3,7 @@ import './App.css'
 import Rating from './components/Rating'
 import Ratings from './components/Ratings'
 import StaticRating from './components/StaticRating'
+import Toggle from './components/Toggle'
 import { Submission, SavedSubmission } from './models'
 import { agents } from './constants'
 import { getRatings, postRating } from './client'
@@ -14,6 +15,7 @@ const zeroRatings = agents.reduce<Record<string, number>>((aggregate, agent) => 
 
 function App() {
 
+  const [agentType, setAgentType] = React.useState(true)
   const [submissions, setSubmissions] = React.useState<SavedSubmission[]>([])
 
   React.useEffect(() => {
@@ -61,6 +63,11 @@ function App() {
     setSubmissions([...submissions, savedSubmission])
   }
 
+  const onChangeAgentType = (agentType: boolean) => {
+    console.log({ agentType })
+    setAgentType(x => !x)
+  }
+
   return (
     <div className="center">
       <header>
@@ -70,6 +77,16 @@ function App() {
       <section>
         <h2>Rank the Women:</h2>
         <p>Who do you find most attractive from Valorant?</p>
+        <div className="toggler">
+          <b></b>
+          <Toggle
+            on={agentType}
+            onChange={onChangeAgentType}
+            onLabel="Women"
+            offLabel="Men"
+          />
+          <b></b>
+        </div>
         <Rating onSubmit={onSubmit} />
       </section>
 
