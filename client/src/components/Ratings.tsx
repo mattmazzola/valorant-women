@@ -1,7 +1,7 @@
 import React from 'react'
 import './Ratings.css'
 import { agents } from '../constants'
-import { Resolved, SavedSubmission, Submission } from '../models'
+import { Resolved, SavedSubmission } from '../models'
 import { convertNamesToAgents } from '../utilities'
 
 type Props = {
