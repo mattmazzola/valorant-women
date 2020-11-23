@@ -1,6 +1,6 @@
 import { Submission, SavedSubmission } from './models'
 
-const baseUrl = `http://localhost:3002`
+const baseUrl = process.env.REACT_APP_BASE_URL!
 
 export async function getRatings(): Promise<SavedSubmission[]> {
     const response = await fetch(`${baseUrl}/ratings`)
