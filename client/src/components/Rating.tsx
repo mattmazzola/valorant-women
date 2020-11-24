@@ -1,11 +1,11 @@
 import React from 'react'
 import './Rating.css'
-import { agents, bannedWords } from '../constants'
+import { bannedWords } from '../constants'
 import { shuffle } from '../utilities'
 import { DragDropContext, Droppable, Draggable, DropResult, ResponderProvided } from 'react-beautiful-dnd'
-import { Submission } from '../models'
+import { Agent, Submission } from '../models'
 
-// a little function to help us with reordering the result
+// function to help us with reordering the result
 function reorder<T>(list: T[], startIndex: number, endIndex: number) {
     const result = Array.from(list)
     const [removed] = result.splice(startIndex, 1)
@@ -15,11 +15,12 @@ function reorder<T>(list: T[], startIndex: number, endIndex: number) {
 }
 
 type Props = {
+    agents: Agent[]
     onSubmit: (submission: Submission) => void
 }
 
 const Component: React.FC<Props> = (props) => {
-    const [manuallySortedAgents, updateManuallySortedAgents] = React.useState(() => shuffle(agents))
+    const [manuallySortedAgents, updateManuallySortedAgents] = React.useState(() => shuffle(props.agents))
     const onDragEnd = (result: DropResult, provided: ResponderProvided) => {
         if (!result?.destination) {
             return
@@ -77,17 +78,17 @@ const Component: React.FC<Props> = (props) => {
                         Nottest
                     </div>
                 </header>
-                <div className="ranks">
-                    {Array.from({ length: agents.length }, (_, i) => i + 1)
+                <div className="ranks" data-agents={props.agents.length}>
+                    {Array.from({ length: props.agents.length }, (_, i) => i + 1)
                         .map(v => (
                             <div key={v}>{v}</div>
                         ))}
                 </div>
 
-                <Droppable droppableId="agents" direction="horizontal">
+                <Droppable droppableId={`agents-${props.agents[0].id}`} direction="horizontal">
                     {(provided) => {
                         return (
-                            <ol className="list" {...provided.droppableProps} ref={provided.innerRef}>
+                            <ol className="list" data-agents={props.agents.length} {...provided.droppableProps} ref={provided.innerRef}>
                                 {manuallySortedAgents.map((agent, index) => (
                                     <Draggable key={agent.id} draggableId={agent.id} index={index}>
                                         {(draggableProvided) => (

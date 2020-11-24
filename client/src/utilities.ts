@@ -1,4 +1,4 @@
-import { Agent } from "./models"
+import { Agent, SavedSubmission } from "./models"
 
 export function shuffle<T>(xs: T[]): T[] {
 
@@ -29,4 +29,32 @@ export function convertNamesToAgents(agentNames: string[], agents: Agent[]): Age
     })
 
     return chosenAgentList
+}
+
+export function getAgentNamesSortedByRating(submissions: SavedSubmission[], agents: Agent[]): string[] {
+    const zeroRatings = agents.reduce<Record<string, number>>((aggregate, agent) => {
+        aggregate[agent.id] = 0
+        return aggregate
+    }, {})
+
+    const totalRatings = submissions.reduce((totals, submission) => {
+        for (const [i, a] of submission.rankedAgentNames.entries()) {
+            totals[a] += i
+        }
+
+        return totals
+    }, { ...zeroRatings })
+
+    const avgRatings = { ...totalRatings }
+    Object.entries(avgRatings)
+        .forEach(([key, value]) => {
+            avgRatings[key] = value / submissions.length
+        })
+
+
+    const avgRatingNames = Object.entries(avgRatings)
+        .sort(([key1, v1], [key2, v2]) => v1 - v2)
+        .map(([key]) => key)
+
+    return avgRatingNames
 }

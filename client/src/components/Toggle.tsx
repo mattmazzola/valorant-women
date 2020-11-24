@@ -13,8 +13,8 @@ const Component: React.FC<Props> = (props) => {
     return (
         <div className="toggle">
             <div className={`overlay ${props.on ? `on` : `off`}`}></div>
-            <button type="button" onClick={() => props.onChange(true)}>{props.onLabel}</button>
-            <button type="button" onClick={() => props.onChange(false)}>{props.offLabel}</button>
+            <button type="button" className={props.on ? `text-black` : ``} onClick={() => props.onChange(true)}>{props.onLabel}</button>
+            <button type="button" className={props.on ? `` : `text-black`} onClick={() => props.onChange(false)}>{props.offLabel}</button>
         </div>
     )
 }

@@ -1,14 +1,15 @@
 import React from 'react'
-import { agents } from '../constants'
+import { Agent } from '../models'
 import { convertNamesToAgents } from '../utilities'
 
 type Props = {
+    agents: Agent[]
     sortedAgentNames: string[]
 }
 
 const Component: React.FC<Props> = (props) => {
 
-    const chosenAgentList = convertNamesToAgents(props.sortedAgentNames, agents)
+    const chosenAgentList = convertNamesToAgents(props.sortedAgentNames, props.agents)
 
     return (
         <div className="rating">
@@ -27,7 +28,7 @@ const Component: React.FC<Props> = (props) => {
             </header>
 
             <div className="ranks">
-                {Array.from({ length: agents.length }, (_, i) => i + 1)
+                {Array.from({ length: props.agents.length }, (_, i) => i + 1)
                     .map(v => (
                         <div key={v}>{v}</div>
                     ))}

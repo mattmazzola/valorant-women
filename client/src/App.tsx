@@ -5,27 +5,33 @@ import Ratings from './components/Ratings'
 import StaticRating from './components/StaticRating'
 import Toggle from './components/Toggle'
 import { Submission, SavedSubmission } from './models'
-import { agents } from './constants'
+import { femaleAgents, maleAgents } from './constants'
 import { getRatings, postRating } from './client'
+import { getAgentNamesSortedByRating } from './utilities'
 
-const zeroRatings = agents.reduce<Record<string, number>>((aggregate, agent) => {
-  aggregate[agent.id] = 0
-  return aggregate
-}, {})
+console.log({ femaleAgents, maleAgents })
 
 function App() {
 
-  const [agentType, setAgentType] = React.useState(true)
-  const [submissions, setSubmissions] = React.useState<SavedSubmission[]>([])
+  const [agentType, setAgentType] = React.useState(false)
+  const activeSex = agentType ? 'Women' : 'Men'
+
+  React.useEffect(() => {
+    document.title = `${activeSex} of Valorant`
+  })
+
+  const [womenSubmissions, setWomenSubmissions] = React.useState<SavedSubmission[]>([])
+  const [menSubmissions, setMenSubmissions] = React.useState<SavedSubmission[]>([])
 
   React.useEffect(() => {
     let isMounted = true
 
     async function loadRatings() {
-      const ratings = await getRatings()
+      const [womenRatings, menRatings] = await Promise.all([getRatings("women"), getRatings("men")])
 
       if (isMounted) {
-        setSubmissions(ratings)
+        setWomenSubmissions(womenRatings)
+        setMenSubmissions(menRatings)
       }
     }
 
@@ -36,46 +42,37 @@ function App() {
     }
   }, [])
 
-  const totalRatings = submissions.reduce((totals, submission) => {
+  const avgWomenRatingNames = getAgentNamesSortedByRating(womenSubmissions, femaleAgents)
+  let avgMenRatingNames = ["breach", "brimstone", "cypher", "phoenix", "omen", "sova"]
 
-    for (const [i, a] of submission.rankedAgentNames.entries()) {
-      totals[a] += i
-    }
-
-    return totals
-  }, { ...zeroRatings })
-
-  const avgRatings = { ...totalRatings }
-  Object.entries(avgRatings)
-    .forEach(([key, value]) => {
-      avgRatings[key] = value / submissions.length
-    })
-
-  const avgRatingNames = Object.entries(avgRatings)
-    .sort(([key1, v1], [key2, v2]) => v1 - v2)
-    .map(([key]) => key)
-
-  const onSubmit = async (submission: Submission) => {
-
+  const onSubmitWomenRating = async (submission: Submission) => {
     const savedSubmission = await postRating(submission)
     console.log({ submission, savedSubmission })
 
-    setSubmissions([...submissions, savedSubmission])
+    setWomenSubmissions([...womenSubmissions, savedSubmission])
   }
 
-  const onChangeAgentType = (agentType: boolean) => {
-    console.log({ agentType })
-    setAgentType(x => !x)
+  const onSubmitMenRating = async (submission: Submission) => {
+    const savedSubmission = await postRating(submission)
+    console.log({ submission, savedSubmission })
+
+    setMenSubmissions([...menSubmissions, savedSubmission])
   }
+
+  const onChangeAgentType = (aType: boolean) => {
+    setAgentType(x => aType)
+  }
+
+
 
   return (
     <div className="center">
       <header>
-        <h1>Rate the Women of Valorant</h1>
+        <h1>Rate the {activeSex} of Valorant</h1>
       </header>
 
       <section>
-        <h2>Rank the Women:</h2>
+        <h2>Rank the {activeSex}:</h2>
         <p>Who do you find most attractive from Valorant?</p>
         <div className="toggler">
           <b></b>
@@ -87,19 +84,25 @@ function App() {
           />
           <b></b>
         </div>
-        <Rating onSubmit={onSubmit} />
+        {agentType
+          ? <Rating onSubmit={onSubmitWomenRating} agents={femaleAgents} key="female" />
+          : <Rating onSubmit={onSubmitMenRating} agents={maleAgents} key="male" />}
       </section>
 
       <section>
         <h2>What the People Think:</h2>
-        <p>Based on the average of all the 7234 ratings this is what the people think.</p>
-        <StaticRating sortedAgentNames={avgRatingNames} />
+        <p>Based on the average of all the {agentType ? womenSubmissions.length : menSubmissions.length} ratings this is what the people think.</p>
+        {agentType
+          ? <StaticRating sortedAgentNames={avgWomenRatingNames} agents={femaleAgents} />
+          : <StaticRating sortedAgentNames={avgMenRatingNames} agents={maleAgents} />}
       </section>
 
       <section>
         <h2>Individual Ratings</h2>
         <p>Ratings by individual submissions.</p>
-        <Ratings submissions={submissions} />
+        {agentType
+          ? <Ratings submissions={womenSubmissions} agents={femaleAgents} />
+          : <Ratings submissions={menSubmissions} agents={maleAgents} />}
       </section>
     </div>
   )

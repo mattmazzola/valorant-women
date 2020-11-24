@@ -2,12 +2,15 @@ import { Submission, SavedSubmission } from './models'
 
 const baseUrl = process.env.REACT_APP_BASE_URL!
 
-export async function getRatings(): Promise<SavedSubmission[]> {
+export async function getRatings(type: "women" | "men" = "women"): Promise<SavedSubmission[]> {
+    if (type === "men") {
+        return []
+    }
+
     const response = await fetch(`${baseUrl}/ratings`)
 
     if (!response.ok) {
-        throwError(`GET /ratings failed.`, response)
-
+        return throwError(`GET /ratings failed.`, response)
     }
 
     const json = await response.json()
@@ -26,7 +29,7 @@ export async function postRating(rating: Submission): Promise<SavedSubmission> {
     })
 
     if (!response.ok) {
-        throwError(`POST to /ratings failed.`, response)
+        return throwError(`POST to /ratings failed.`, response)
     }
 
     const json = await response.json()

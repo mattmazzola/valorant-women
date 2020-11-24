@@ -1,10 +1,10 @@
 import React from 'react'
 import './Ratings.css'
-import { agents } from '../constants'
-import { Resolved, SavedSubmission } from '../models'
+import { Agent, Resolved, SavedSubmission } from '../models'
 import { convertNamesToAgents } from '../utilities'
 
 type Props = {
+    agents: Agent[]
     submissions: SavedSubmission[]
 }
 
@@ -16,8 +16,15 @@ const datetimeOptions: Intl.DateTimeFormatOptions = {
 }
 const Component: React.FC<Props> = (props) => {
 
+    React.useEffect(() => {
+        console.log(`Rating mount`, props.agents)
+
+        return () => {
+            console.log(`Rating unmount`, props.agents)
+        }
+    })
     const resolveSubmissions = props.submissions.map<Resolved<SavedSubmission>>(submission => {
-        const chosenAgentList = convertNamesToAgents(submission.rankedAgentNames, agents)
+        const chosenAgentList = convertNamesToAgents(submission.rankedAgentNames, props.agents)
 
         return {
             id: submission.id,
@@ -45,7 +52,7 @@ const Component: React.FC<Props> = (props) => {
 
             <b></b>
             <b></b>
-            {Array.from({ length: agents.length }, (_, i) => i + 1)
+            {Array.from({ length: props.agents.length }, (_, i) => i + 1)
                 .map(v => (
                     <div key={v}>{v}</div>
                 ))}

@@ -44,6 +44,14 @@
     background-color: var(--dark-bg);
 }
 
+.list[data-agents="7"] {
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.list[data-agents="6"] {
+    grid-template-columns: repeat(6, 1fr);
+}
+
 .ranks {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -55,6 +63,14 @@
     font-size: 4rem;
     font-weight: bold;
     padding: 0.5rem;
+}
+
+.ranks[data-agents="7"] {
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.ranks[data-agents="6"] {
+    grid-template-columns: repeat(6, 1fr);
 }
 
 .agent {
