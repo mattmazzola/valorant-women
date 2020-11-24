@@ -16,18 +16,12 @@ const datetimeOptions: Intl.DateTimeFormatOptions = {
 }
 const Component: React.FC<Props> = (props) => {
 
-    React.useEffect(() => {
-        console.log(`Rating mount`, props.agents)
-
-        return () => {
-            console.log(`Rating unmount`, props.agents)
-        }
-    })
     const resolveSubmissions = props.submissions.map<Resolved<SavedSubmission>>(submission => {
         const chosenAgentList = convertNamesToAgents(submission.rankedAgentNames, props.agents)
 
         return {
             id: submission.id,
+            isWomen: submission.isWomen,
             userName: submission.userName,
             createdAt: submission.createdAt,
             rankedAgents: chosenAgentList,
@@ -35,7 +29,7 @@ const Component: React.FC<Props> = (props) => {
     })
 
     return (
-        <div className="ratings">
+        <div className="ratings" data-agents={props.agents.length}>
             <b></b>
             <b></b>
             <div>
@@ -70,7 +64,6 @@ const Component: React.FC<Props> = (props) => {
                     </React.Fragment>
                 )
             })}
-
         </div>
     )
 }

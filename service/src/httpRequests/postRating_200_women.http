@@ -4,6 +4,7 @@ Content-Type: application/json
 
 {
     "userName": "Matt",
+    "isWomen": true,
     "rankedAgentNames": [
         "jett",
         "killjoy",

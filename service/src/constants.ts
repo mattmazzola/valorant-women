@@ -1,4 +1,4 @@
-export const agents = [
+export const femaleAgents = [
     'killjoy',
     'jett',
     'raze',
@@ -6,4 +6,13 @@ export const agents = [
     'sage',
     'skye',
     'viper'
+]
+
+export const maleAgents = [
+    'breach',
+    'brimstone',
+    'cypher',
+    'omen',
+    'phoenix',
+    'sova',
 ]

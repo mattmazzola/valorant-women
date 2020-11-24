@@ -3,14 +3,26 @@ import * as models from "../models"
 import { Rating } from '../entity'
 import * as constants from '../constants'
 
+type agentType = "women" | "men"
+
 const plugin: fastify.FastifyPluginCallback = (fastify, pluginOptions, done) => {
     const connection = fastify.connection
 
     fastify.get(
         '/',
-        {},
+        {
+            schema: {
+                querystring: {
+                    gender: {
+                        type: 'string'
+                    }
+                }
+            }
+        },
         async (req, rep) => {
-            const ratings = await connection.manager.find(Rating)
+            const isWomen = (req.query as any).gender === "men"
+                ? false : true
+            const ratings = await connection.manager.find(Rating, { where: { isWomen } })
 
             return ratings
         })
@@ -25,7 +37,11 @@ const plugin: fastify.FastifyPluginCallback = (fastify, pluginOptions, done) => 
         async (req, rep) => {
             const ratingInput = req.body as models.rating.Input
 
-            const containsAllAgents = constants.agents.every(agent => ratingInput.rankedAgentNames.includes(agent))
+            const agents = ratingInput.isWomen
+                ? constants.femaleAgents
+                : constants.maleAgents
+
+            const containsAllAgents = agents.every(agent => ratingInput.rankedAgentNames.includes(agent))
             if (!containsAllAgents) {
                 rep.code(400)
 
@@ -38,6 +54,7 @@ const plugin: fastify.FastifyPluginCallback = (fastify, pluginOptions, done) => 
 
             const ratingEntity = new Rating()
             ratingEntity.userName = ratingInput.userName
+            ratingEntity.isWomen = ratingInput.isWomen
             ratingEntity.rankedAgentNames = ratingInput.rankedAgentNames
 
             const savedRating = await connection.manager.save(ratingEntity)

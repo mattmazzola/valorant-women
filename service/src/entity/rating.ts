@@ -10,6 +10,9 @@ export class Rating {
     createdAt: Date
 
     @Column()
+    isWomen: boolean
+
+    @Column()
     userName: string
 
     @Column("simple-array")

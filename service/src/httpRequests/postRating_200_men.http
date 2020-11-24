@@ -4,14 +4,13 @@ Content-Type: application/json
 
 {
     "userName": "Matt",
-    "isWomen": true,
+    "isWomen": false,
     "rankedAgentNames": [
-        "jett",
-        "killjoy",
-        "raze",
-        "reyna",
-        "skye",
-        "sage",
-        "unknown"
+        "brimstone",
+        "breach",
+        "cypher",
+        "phoenix",
+        "omen",
+        "sova"
     ]
 }

@@ -13,7 +13,7 @@ console.log({ femaleAgents, maleAgents })
 
 function App() {
 
-  const [agentType, setAgentType] = React.useState(false)
+  const [agentType, setAgentType] = React.useState(true)
   const activeSex = agentType ? 'Women' : 'Men'
 
   React.useEffect(() => {
@@ -43,7 +43,7 @@ function App() {
   }, [])
 
   const avgWomenRatingNames = getAgentNamesSortedByRating(womenSubmissions, femaleAgents)
-  let avgMenRatingNames = ["breach", "brimstone", "cypher", "phoenix", "omen", "sova"]
+  const avgMenRatingNames = getAgentNamesSortedByRating(menSubmissions, maleAgents)
 
   const onSubmitWomenRating = async (submission: Submission) => {
     const savedSubmission = await postRating(submission)
@@ -85,8 +85,8 @@ function App() {
           <b></b>
         </div>
         {agentType
-          ? <Rating onSubmit={onSubmitWomenRating} agents={femaleAgents} key="female" />
-          : <Rating onSubmit={onSubmitMenRating} agents={maleAgents} key="male" />}
+          ? <Rating onSubmit={onSubmitWomenRating} agents={femaleAgents} gender="women" key="female" />
+          : <Rating onSubmit={onSubmitMenRating} agents={maleAgents} gender="men" key="male" />}
       </section>
 
       <section>

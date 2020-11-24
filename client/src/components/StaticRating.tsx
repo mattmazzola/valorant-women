@@ -27,14 +27,14 @@ const Component: React.FC<Props> = (props) => {
                 </div>
             </header>
 
-            <div className="ranks">
+            <div className="ranks" data-agents={props.agents.length}>
                 {Array.from({ length: props.agents.length }, (_, i) => i + 1)
                     .map(v => (
                         <div key={v}>{v}</div>
                     ))}
             </div>
 
-            <ol className="list">
+            <ol className="list" data-agents={props.agents.length}>
                 {chosenAgentList.map(agent => (
                     <li className="agent2" key={agent.id}>
                         <img

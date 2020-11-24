@@ -1,6 +1,7 @@
 
 export type Submission = {
     userName: string
+    isWomen: boolean
     rankedAgentNames: string[]
 }
 

@@ -2,12 +2,8 @@ import { Submission, SavedSubmission } from './models'
 
 const baseUrl = process.env.REACT_APP_BASE_URL!
 
-export async function getRatings(type: "women" | "men" = "women"): Promise<SavedSubmission[]> {
-    if (type === "men") {
-        return []
-    }
-
-    const response = await fetch(`${baseUrl}/ratings`)
+export async function getRatings(gender: "women" | "men" = "women"): Promise<SavedSubmission[]> {
+    const response = await fetch(`${baseUrl}/ratings?gender=${gender}`)
 
     if (!response.ok) {
         return throwError(`GET /ratings failed.`, response)
