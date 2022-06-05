@@ -1,8 +1,9 @@
-import "reflect-metadata"
+import dotenv from "dotenv-flow"
 import fastify from "fastify"
 import fastifyCors from "fastify-cors"
-import dotenv from "dotenv"
-import plugin from "./plugins/orm"
+import "reflect-metadata"
+import invariant from 'tiny-invariant'
+import ormPlugin from "./plugins/orm"
 import ratings from './routes/ratings'
 
 dotenv.config()
@@ -11,11 +12,12 @@ process.on('unhandledRejection', error => {
     throw error
 })
 
-const hostname = '0.0.0.0'
-const defaultPort = 3002
-const port = process.env.PORT ?? defaultPort
-
 async function main() {
+    const hostname = process.env.HOSTNAME
+    invariant(typeof hostname === 'string')
+    
+    const port = process.env.PORT
+    invariant(typeof port === 'string')
 
     const server = fastify({
         logger: {
@@ -26,7 +28,7 @@ async function main() {
         caseSensitive: false,
     })
 
-    server.register(plugin)
+    server.register(ormPlugin)
         .after(err => {
             if (err) throw err
         })
@@ -34,7 +36,7 @@ async function main() {
     server.register(fastifyCors)
     server.register(ratings, { prefix: '/ratings' })
 
-    server.get('/routes', async () => {
+    server.get('/info/routes', async () => {
         return server.printRoutes()
     })
 
@@ -43,9 +45,11 @@ async function main() {
     })
 
     try {
+        console.log(`http://localhost:${port}`)
         await server.listen(port, hostname)
     } catch (err) {
-        server.log.error(err)
+        const error = err as Error
+        server.log.error(error.message)
         process.exit(1)
     }
 }

@@ -1,0 +1,28 @@
+version: '3.4'
+
+services:
+  # valorant-women-service:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   environment:
+  #     - TYPEORM_HOST=myproject://sql
+  #     - TYPEORM_USERNAME=SA
+  #     - TYPEORM_PASSWORD=<YourStrong@Passw0rd>
+  #   networks:
+  #     - service
+  #   depends_on:
+  #     - sql
+
+  sql:
+    image: mcr.microsoft.com/mssql/server:2019-GA-ubuntu-16.04
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=<YourStrong@Passw0rd>
+    ports:
+      - "1443:1443"
+    # networks:
+    #   - service
+
+# networks:
+#   service:
