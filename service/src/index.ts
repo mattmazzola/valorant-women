@@ -3,7 +3,6 @@ import fastify from "fastify"
 import fastifyCors from "fastify-cors"
 import "reflect-metadata"
 import invariant from 'tiny-invariant'
-import ormPlugin from "./plugins/orm"
 import ratings from './routes/ratings'
 
 dotenv.config()
@@ -28,10 +27,10 @@ async function main() {
         caseSensitive: false,
     })
 
-    server.register(ormPlugin)
-        .after(err => {
-            if (err) throw err
-        })
+    // server.register(ormPlugin)
+    //     .after(err => {
+    //         if (err) throw err
+    //     })
 
     server.register(fastifyCors)
     server.register(ratings, { prefix: '/ratings' })

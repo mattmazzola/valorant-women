@@ -1,5 +1,18 @@
 # Service
 
+## Start up
+
+1. Start the SQL service
+  - This service attempts to connect to the SQL database so it must be running
+
+## Running as container
+
+```
+docker build -t valorant-women-service-2 .
+docker run -it -p 3002:3002 valorant-women-service-2
+```
+
+
 #### 2.e Create Type ORM Connection file
 
 - Create `ormconfig.json` in root of project

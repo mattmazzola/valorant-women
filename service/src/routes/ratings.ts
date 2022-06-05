@@ -1,9 +1,7 @@
 import * as fastify from 'fastify'
-import * as models from "../models"
-import { Rating } from '../entity'
 import * as constants from '../constants'
-
-type agentType = "women" | "men"
+import { Rating } from '../entity'
+import * as models from "../models"
 
 const plugin: fastify.FastifyPluginCallback = (fastify, pluginOptions, done) => {
     const connection = fastify.connection
@@ -22,9 +20,9 @@ const plugin: fastify.FastifyPluginCallback = (fastify, pluginOptions, done) => 
         async (req, rep) => {
             const isWomen = (req.query as any).gender === "men"
                 ? false : true
-            const ratings = await connection.manager.find(Rating, { where: { isWomen } })
+            // const ratings = await connection.manager.find(Rating, { where: { isWomen } })
 
-            return ratings
+            return []
         })
 
     fastify.post(
@@ -57,9 +55,9 @@ const plugin: fastify.FastifyPluginCallback = (fastify, pluginOptions, done) => 
             ratingEntity.isWomen = ratingInput.isWomen
             ratingEntity.rankedAgentNames = ratingInput.rankedAgentNames
 
-            const savedRating = await connection.manager.save(ratingEntity)
+            // const savedRating = await connection.manager.save(ratingEntity)
 
-            return savedRating
+            return ratingEntity
         })
 
     done()
