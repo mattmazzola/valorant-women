@@ -15,16 +15,13 @@ services:
   #     - sql
 
   sql:
-    image: mcr.microsoft.com/mssql/server:2019-GA-ubuntu-16.04
-    environment:
-      - ACCEPT_EULA=Y
-      - SA_PASSWORD=<YourStrong@Passw0rd>
-    expose:
-      - 1433
+    build:
+      context: sql
+      dockerfile: Dockerfile
     ports:
       - "1433:1433"
-    # networks:
-    #   - service
+    networks:
+      - service
 
-# networks:
-#   service:
+networks:
+  service:
