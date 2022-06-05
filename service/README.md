@@ -1,6 +1,5 @@
 # Service
 
-
 #### 2.e Create Type ORM Connection file
 
 - Create `ormconfig.json` in root of project

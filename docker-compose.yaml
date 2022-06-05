@@ -1,18 +1,21 @@
 version: '3.4'
 
 services:
-  # valorant-women-service:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   environment:
-  #     - TYPEORM_HOST=myproject://sql
-  #     - TYPEORM_USERNAME=SA
-  #     - TYPEORM_PASSWORD=<YourStrong@Passw0rd>
-  #   networks:
-  #     - service
-  #   depends_on:
-  #     - sql
+  valorant-women-service:
+    build:
+      context: service
+      dockerfile: Dockerfile
+    environment:
+      - TYPEORM_HOST=valorant-women_service://sql
+      - TYPEORM_PORT=1433
+      - TYPEORM_USERNAME=SA
+      - TYPEORM_PASSWORD=<YourStrong@Passw0rd>
+    ports:
+      - "3002:3002"
+    networks:
+      - service
+    depends_on:
+      - sql
 
   sql:
     build:
