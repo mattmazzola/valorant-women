@@ -1,6 +1,6 @@
-import { Submission, SavedSubmission } from './models'
+import { SavedSubmission, Submission } from './models'
 
-const baseUrl = process.env.REACT_APP_BASE_URL!
+const baseUrl = process.env.REACT_APP_SERVICE_BASE_URL!
 
 export async function getRatings(gender: "women" | "men" = "women"): Promise<SavedSubmission[]> {
     const response = await fetch(`${baseUrl}/ratings?gender=${gender}`)
