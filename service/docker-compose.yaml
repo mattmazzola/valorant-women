@@ -19,8 +19,10 @@ services:
     environment:
       - ACCEPT_EULA=Y
       - SA_PASSWORD=<YourStrong@Passw0rd>
+    expose:
+      - 1433
     ports:
-      - "1443:1443"
+      - "1433:1433"
     # networks:
     #   - service
 
