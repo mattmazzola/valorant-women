@@ -49,8 +49,6 @@ const Component: React.FC<Props> = (props) => {
                     </li>
                 ))}
             </ol>
-
-
         </div>
     )
 }

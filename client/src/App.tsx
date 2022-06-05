@@ -1,12 +1,12 @@
 import React from 'react'
 import './App.css'
-import Rating from './components/Rating'
-import Ratings from './components/Ratings'
-import StaticRating from './components/StaticRating'
-import Toggle from './components/Toggle'
-import { Submission, SavedSubmission } from './models'
-import { femaleAgents, maleAgents } from './constants'
 import { getRatings, postRating } from './client'
+import Rating from './components/Rating'
+import StaticRating from './components/StaticRating'
+import StaticRatings from './components/StaticRatings'
+import Toggle from './components/Toggle'
+import { femaleAgents, maleAgents } from './constants'
+import { SavedSubmission, Submission } from './models'
 import { getAgentNamesSortedByRating } from './utilities'
 
 console.log({ femaleAgents, maleAgents })
@@ -63,8 +63,6 @@ function App() {
     setAgentType(x => aType)
   }
 
-
-
   return (
     <div className="center">
       <header>
@@ -72,7 +70,6 @@ function App() {
       </header>
 
       <section>
-        <h2>Rank the {activeSex}:</h2>
         <p>Who do you find most attractive from Valorant?</p>
         <div className="toggler">
           <b></b>
@@ -84,6 +81,7 @@ function App() {
           />
           <b></b>
         </div>
+        <p>Drag and re-order each character into your preferred position, then submit your order!</p>
         {agentType
           ? <Rating onSubmit={onSubmitWomenRating} agents={femaleAgents} gender="women" key="female" />
           : <Rating onSubmit={onSubmitMenRating} agents={maleAgents} gender="men" key="male" />}
@@ -101,8 +99,8 @@ function App() {
         <h2>Individual Ratings</h2>
         <p>Ratings by individual submissions.</p>
         {agentType
-          ? <Ratings submissions={womenSubmissions} agents={femaleAgents} />
-          : <Ratings submissions={menSubmissions} agents={maleAgents} />}
+          ? <StaticRatings submissions={womenSubmissions} agents={femaleAgents} />
+          : <StaticRatings submissions={menSubmissions} agents={maleAgents} />}
       </section>
     </div>
   )

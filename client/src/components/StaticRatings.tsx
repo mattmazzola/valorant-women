@@ -1,7 +1,7 @@
 import React from 'react'
-import './Ratings.css'
 import { Agent, Resolved, SavedSubmission } from '../models'
 import { convertNamesToAgents } from '../utilities'
+import './Ratings.css'
 
 type Props = {
     agents: Agent[]
@@ -30,7 +30,7 @@ const Component: React.FC<Props> = (props) => {
 
     return (
         <div className="ratings" data-agents={props.agents.length}>
-            <b></b>
+            <div>User Name</div>
             <b></b>
             <div>
                 Hottest
