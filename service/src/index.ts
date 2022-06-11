@@ -1,6 +1,6 @@
+import fastifyCors from "@fastify/cors"
 import dotenv from "dotenv-flow"
 import fastify from "fastify"
-import fastifyCors from "fastify-cors"
 import "reflect-metadata"
 import invariant from 'tiny-invariant'
 import ratings from './routes/ratings'
@@ -11,41 +11,47 @@ process.on('unhandledRejection', error => {
     throw error
 })
 
-async function main() {
-    const hostname = process.env.HOSTNAME
-    invariant(typeof hostname === 'string')
-    
-    const port = process.env.PORT
-    invariant(typeof port === 'string')
+const host = process.env.HOST
+invariant(typeof host === 'string')
 
-    const server = fastify({
-        logger: {
-            // redact: ['req.headers.authorization'],
-            prettyPrint: true,
-            // level: ['info']
-        },
-        caseSensitive: false,
-    })
+const port = Number(process.env.PORT)
+invariant(typeof port === 'number')
 
-    // server.register(ormPlugin)
-    //     .after(err => {
-    //         if (err) throw err
-    //     })
+const server = fastify({
+    logger: {
+        transport: {
+          target: 'pino-pretty',
+          options: { destination: 1 }
+        }
+        // redact: ['req.headers.authorization'],
+        // level: ['info']
+    },
+    caseSensitive: false,
+})
 
-    server.register(fastifyCors)
-    server.register(ratings, { prefix: '/ratings' })
+// server.register(ormPlugin)
+//     .after(err => {
+//         if (err) throw err
+//     })
 
-    server.get('/info/routes', async () => {
-        return server.printRoutes()
-    })
+server.register(fastifyCors)
+server.register(ratings, { prefix: '/ratings' })
 
-    server.get('/', async (request, reply) => {
-        return `Women of Valorant server running... ${new Date().toLocaleDateString('en-us')}`
-    })
+server.get('/info/routes', async () => {
+    return server.printRoutes()
+})
 
+server.get('/', async () => {
+    return `Women of Valorant server running... ${new Date().toLocaleDateString('en-us')}`
+})
+
+async function start() {
     try {
         console.log(`http://localhost:${port}`)
-        await server.listen(port, hostname)
+        await server.listen({
+            port,
+            host,
+        })
     } catch (err) {
         const error = err as Error
         server.log.error(error.message)
@@ -53,4 +59,4 @@ async function main() {
     }
 }
 
-main()
+start()

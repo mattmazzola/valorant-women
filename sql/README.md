@@ -6,8 +6,8 @@
 
 ```
 cd ..
-docker-compose up
-docker exec -it valorant-women-service-sql-1 "bash"
+docker compose up
+docker exec -it valorant-women-sql-1 "bash"
 mssql@4f6d6d1b0b55:/$ /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "<YourStrong@Passw0rd>"
 1> CREATE DATABASE womenofvalorant
 2> GO

@@ -6,5 +6,18 @@
         ".vscode{,/**}"
     ],
     "appService.defaultWebAppToDeploy": "/subscriptions/dbe085e6-4448-4069-ab44-483eafb5c59b/resourceGroups/valorant/providers/Microsoft.Web/sites/womenofvalorant",
-    "appService.deploySubpath": "service"
+    "appService.deploySubpath": "service",
+    "omnisharp.organizeImportsOnFormat": false,
+    "[typescript]": {
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": true,
+            "source.fixAll": true
+        }
+    },
+    "[typescriptreact]": {
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": true,
+            "source.fixAll": true
+        }
+    }
 }
