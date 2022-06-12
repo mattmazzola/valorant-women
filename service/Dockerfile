@@ -16,7 +16,7 @@ ADD package.json package-lock.json ./
 RUN npm install --production=false
 
 # Setup production node_modules
-FROM base as production-deps
+FROM deps as production-deps
 
 WORKDIR /myapp
 
@@ -25,7 +25,7 @@ ADD package.json package-lock.json ./
 RUN npm prune --production
 
 # Build the app
-FROM base as build
+FROM deps as build
 
 WORKDIR /myapp
 
@@ -35,7 +35,7 @@ ADD . .
 RUN npm run build
 
 # Finally, build the production image with minimal footprint
-FROM base
+FROM build
 
 ENV PORT 3002
 ENV NODE_ENV production
@@ -43,7 +43,6 @@ ENV NODE_ENV production
 WORKDIR /myapp
 
 COPY --from=production-deps /myapp/node_modules /myapp/node_modules
-
 COPY --from=build /myapp/build /myapp/build
 ADD . .
 
