@@ -2,12 +2,13 @@
   "name": "service",
   "version": "1.0.0",
   "description": "Service for Women of Valorant",
-  "types": "build/index.d.ts",
   "main": "build/index.js",
   "scripts": {
     "build": "tsc",
     "prestart": "npm run build",
-    "start": "node ."
+    "start": "node .",
+    "prestart:dapr": "npm run build",
+    "start:dapr": "dapr run --app-id valorant-women-service --app-port 6001 --dapr-http-port 3500 node ."
   },
   "keywords": [
     "women",
@@ -17,6 +18,7 @@
   "author": "Matt Mazzola",
   "license": "MIT",
   "dependencies": {
+    "@dapr/dapr": "^2.2.1",
     "@fastify/cors": "^8.0.0",
     "@types/dotenv-flow": "^3.2.0",
     "@types/node": "14.14.9",
@@ -24,11 +26,12 @@
     "fastify": "^4.0.1",
     "fastify-plugin": "^3.0.1",
     "fluent-schema": "1.0.5",
-    "mssql": "6.2.3",
     "pino-pretty": "^8.0.0",
-    "reflect-metadata": "0.1.13",
     "tiny-invariant": "^1.2.0",
-    "typeorm": "^0.2.29",
-    "typescript": "^4.7.3"
+    "typescript": "^4.7.3",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@types/uuid": "^8.3.4"
   }
 }

@@ -2,10 +2,17 @@ import S from "fluent-schema"
 import * as constants from '../constants'
 
 export type Input = {
-    userName: string
     isWomen: boolean
+    userName: string
     rankedAgentNames: string[]
 }
+
+export type Output =
+    | Input
+    & {
+        id: string
+        createdAtMs: number
+    }
 
 const [minList, maxList] = constants.femaleAgents.length < constants.maleAgents.length
     ? [constants.femaleAgents, constants.maleAgents]

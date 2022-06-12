@@ -1,3 +1,5 @@
+export const STATE_STORE_NAME = "statestore"
+
 export const femaleAgents = [
     'killjoy',
     'jett',

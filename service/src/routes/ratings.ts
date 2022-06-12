@@ -1,10 +1,10 @@
 import * as fastify from 'fastify'
+import { v4 as uuidV4 } from 'uuid'
 import * as constants from '../constants'
-import { Rating } from '../entity'
+import { STATE_STORE_NAME } from '../constants'
 import * as models from "../models"
 
 const plugin: fastify.FastifyPluginCallback = (fastify, pluginOptions, done) => {
-    const connection = fastify.connection
 
     fastify.get(
         '/',
@@ -20,9 +20,26 @@ const plugin: fastify.FastifyPluginCallback = (fastify, pluginOptions, done) => 
         async (req, rep) => {
             const isWomen = (req.query as any).gender === "men"
                 ? false : true
-            // const ratings = await connection.manager.find(Rating, { where: { isWomen } })
 
-            return []
+            // https://docs.dapr.io/reference/api/state_api/#query-state
+            const ratings = await fastify.daprClient.state.query(STATE_STORE_NAME, {
+                filter: {
+                    EQ: {
+                        "rating.isWomen": true
+                    }
+                },
+                sort: [
+                    {
+                        key: "createdAtMs",
+                        order: "DESC"
+                    }
+                ],
+                page: {
+                    limit: 10
+                }
+            })
+
+            return ratings
         })
 
     fastify.post(
@@ -50,14 +67,20 @@ const plugin: fastify.FastifyPluginCallback = (fastify, pluginOptions, done) => 
                 }
             }
 
-            const ratingEntity = new Rating()
-            ratingEntity.userName = ratingInput.userName
-            ratingEntity.isWomen = ratingInput.isWomen
-            ratingEntity.rankedAgentNames = ratingInput.rankedAgentNames
+            const rating: models.rating.Output = {
+                ...ratingInput,
+                id: uuidV4(),
+                createdAtMs: Date.now()
+            }
 
-            // const savedRating = await connection.manager.save(ratingEntity)
+            await fastify.daprClient.state.save(STATE_STORE_NAME, [
+                {
+                    key: rating.id,
+                    value: rating
+                }
+            ])
 
-            return ratingEntity
+            return rating
         })
 
     done()

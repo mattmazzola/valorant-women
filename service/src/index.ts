@@ -1,9 +1,8 @@
 import fastifyCors from "@fastify/cors"
 import dotenv from "dotenv-flow"
 import fastify from "fastify"
-import "reflect-metadata"
 import invariant from 'tiny-invariant'
-import ormPlugin from './plugins/orm'
+import daprPlugin from './plugins/dapr'
 import ratings from './routes/ratings'
 
 dotenv.config()
@@ -32,7 +31,7 @@ const server = fastify({
     caseSensitive: false,
 })
 
-server.register(ormPlugin)
+server.register(daprPlugin)
     .after(err => {
         if (err) throw err
     })
