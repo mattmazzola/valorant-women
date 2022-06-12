@@ -3,6 +3,7 @@ import dotenv from "dotenv-flow"
 import fastify from "fastify"
 import "reflect-metadata"
 import invariant from 'tiny-invariant'
+import ormPlugin from './plugins/orm'
 import ratings from './routes/ratings'
 
 dotenv.config()
@@ -20,19 +21,21 @@ invariant(typeof port === 'number')
 const server = fastify({
     logger: {
         transport: {
-          target: 'pino-pretty',
-          options: { destination: 1 }
+            target: 'pino-pretty',
+            options: {
+                colorize: true,
+                destination: 1
+            }
         }
         // redact: ['req.headers.authorization'],
-        // level: ['info']
     },
     caseSensitive: false,
 })
 
-// server.register(ormPlugin)
-//     .after(err => {
-//         if (err) throw err
-//     })
+server.register(ormPlugin)
+    .after(err => {
+        if (err) throw err
+    })
 
 server.register(fastifyCors)
 server.register(ratings, { prefix: '/ratings' })

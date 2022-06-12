@@ -8,8 +8,8 @@
 ## Running as container
 
 ```
-docker build -t valorant-women-service-2 .
-docker run -it -p 3002:3002 valorant-women-service-2
+docker build -t service .
+docker run -it -p 3002:3002 service
 ```
 
 
