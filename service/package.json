@@ -8,7 +8,9 @@
     "prestart": "npm run build",
     "start": "node .",
     "prestart:dapr": "npm run build",
-    "start:dapr": "dapr run --app-id valorant-women-service --app-port 6001 --dapr-http-port 3500 node ."
+    "start:dapr": "dapr run --app-id valorant-women-service --app-port 6001 --dapr-http-port 3500 node .",
+    "prestart:dapr:components": "npm run build",
+    "start:dapr:components": "dapr run --app-id valorant-women-service --components-path ../components --app-port 6001 --dapr-http-port 3500 node ."
   },
   "keywords": [
     "women",
