@@ -7,19 +7,16 @@ import ormPlugin from './plugins/orm'
 import ratings from './routes/ratings'
 
 const isProduction = process.env.NODE_ENV === 'production'
+console.log({ isProduction })
 if (!isProduction) {
     dotenv.config()
 }
 
-process.on('unhandledRejection', error => {
-    throw error
-})
-
 const host = process.env.HOST
-invariant(typeof host === 'string')
+invariant(typeof host === 'string', `Environment variable HOST must be defined.`)
 
 const port = Number(process.env.PORT)
-invariant(typeof port === 'number')
+invariant(typeof port === 'number', `Environment variable PORT must be defined.`)
 
 const server = fastify({
     logger: {

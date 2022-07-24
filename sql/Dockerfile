@@ -8,7 +8,7 @@ COPY wait-for-it.sh ./
 COPY entrypoint.sh ./
 COPY setup.sh ./
 
-CMD ["/bin/bash", "entrypoint.sh"]
+# CMD ["/bin/bash", "entrypoint.sh"]
 
-# CMD /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "<YourStrong@Passw0rd>"
+CMD ["/opt/mssql-tools/bin/sqlcmd", "-S", "localhost", "-U", "SA", "-P", "<YourStrong@Passw0rd>"]
 

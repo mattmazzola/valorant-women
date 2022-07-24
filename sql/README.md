@@ -5,12 +5,12 @@
 ### 1. Use docker-compose
 
 ```
-docker compose up
+docker build -t valorantwomen-sql .
 ```
 
 ### 2. Open bash terminal in container
 ```
-docker exec -it valorant-women-sql-1 "bash"
+docker exec -it valorantwomen-sql-1 "bash"
 ```
 
 ### 3. Set Username and Password

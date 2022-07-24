@@ -5,7 +5,11 @@ import path from "path"
 import invariant from "tiny-invariant"
 import * as TORM from "typeorm"
 
-dotenv.config()
+const isProduction = process.env.NODE_ENV === 'production'
+console.log({ isProduction })
+if (!isProduction) {
+    dotenv.config()
+}
 
 const plugin: fastify.FastifyPluginCallback = async (instance, pluginOptions, done) => {
 
@@ -15,11 +19,11 @@ const plugin: fastify.FastifyPluginCallback = async (instance, pluginOptions, do
     const password = process.env.TYPEORM_PASSWORD
     const database = process.env.TYPEORM_DATABASE
     
-    invariant(typeof host === 'string')
-    invariant(typeof port === 'number')
-    invariant(typeof username === 'string')
-    invariant(typeof password === 'string')
-    invariant(typeof database === 'string')
+    invariant(typeof host === 'string', `env var TYPEORM_HOST must be defined`)
+    invariant(typeof port === 'number', `env var TYPEORM_PORT must be defined`)
+    invariant(typeof username === 'string', `env var TYPEORM_USERNAME must be defined`)
+    invariant(typeof password === 'string', `env var TYPEORM_PASSWORD must be defined`)
+    invariant(typeof database === 'string', `env var TYPEORM_DATABASE must be defined`)
 
     instance.log.info(`
 Connecting to SQL server:
