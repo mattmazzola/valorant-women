@@ -37,7 +37,6 @@ RUN npm run build
 # Finally, build the production image with minimal footprint
 FROM build
 
-ENV PORT 3002
 ENV NODE_ENV production
 
 WORKDIR /myapp

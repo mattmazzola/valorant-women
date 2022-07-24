@@ -6,7 +6,9 @@ services:
       context: service
       dockerfile: Dockerfile
     environment:
-      - TYPEORM_HOST=valorant-women_service://sql
+      - HOST=0.0.0.0
+      - PORT=3002
+      - TYPEORM_HOST=http://sql
       - TYPEORM_PORT=1433
       - TYPEORM_USERNAME=SA
       - TYPEORM_PASSWORD=<YourStrong@Passw0rd>
@@ -21,6 +23,8 @@ services:
     build:
       context: sql
       dockerfile: Dockerfile
+    environment:
+      - SA_PASSWORD=<YourStrong@Passw0rd>
     ports:
       - "1433:1433"
     networks:

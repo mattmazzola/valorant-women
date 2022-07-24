@@ -6,7 +6,10 @@ import invariant from 'tiny-invariant'
 import ormPlugin from './plugins/orm'
 import ratings from './routes/ratings'
 
-dotenv.config()
+const isProduction = process.env.NODE_ENV === 'production'
+if (!isProduction) {
+    dotenv.config()
+}
 
 process.on('unhandledRejection', error => {
     throw error

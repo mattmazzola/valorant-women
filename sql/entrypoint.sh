@@ -1,0 +1,1 @@
+/opt/mssql/bin/sqlserver & ./setup.sh & sleep infinity & wait
