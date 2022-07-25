@@ -7,19 +7,20 @@ import invariant from "tiny-invariant"
 dotenv.config()
 
 const plugin: fastify.FastifyPluginCallback = async (instance, pluginOptions, done) => {
-    const host = process.env.DAPR_HOST
-    const port = process.env.DAPR_HTTP_PORT
+    const daprHost = process.env.DAPR_HOST
+    const daprPort = process.env.DAPR_HTTP_PORT
 
+    instance.log.info({ env: process.env })
     instance.log.info(`
     Connecting to SQL server:
-\t - server: ${host}
-\t - port: ${port}
+\t - server: ${daprHost}
+\t - port: ${daprPort}
     `)
 
-    invariant(typeof host === 'string', `host is a string`)
-    invariant(typeof port === 'string', `port is a string`)
+    invariant(typeof daprHost === 'string', `env var DAPR_HOST must be a string`)
+    invariant(typeof daprPort === 'string', `env var DAPR_HTTP_PORT must be a string`)
 
-    const daprClient = new DaprClient(host, port, CommunicationProtocolEnum.HTTP)
+    const daprClient = new DaprClient(daprHost, daprPort, CommunicationProtocolEnum.HTTP)
 
     instance
         .decorate('daprClient', daprClient)

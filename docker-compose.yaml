@@ -9,17 +9,20 @@ services:
       - HOST=0.0.0.0
       - PORT=3002
       - START_DELAY=60000
-      - TYPEORM_HOST=host.docker.internal
-      - TYPEORM_PORT=1433
-      - TYPEORM_USERNAME=SA
-      - TYPEORM_PASSWORD=<YourStrong@Passw0rd>
-      - TYPEORM_DATABASE=womenofvalorant
+      - DAPR_HTTP_PORT=3500
     ports:
       - "3002:3002"
     networks:
       - service
     depends_on:
       - sql
+
+  api-dapr:
+    image: "daprio/daprd:latest"
+    command: ["./daprd", "-app-id", "api", "-app-port", "3002", "-dapr-http-port", "3500"]
+    depends_on:
+      - api
+    network_mode: "service:api"
 
   sql:
     build:
@@ -32,6 +35,11 @@ services:
       - "1433:1433"
     networks:
       - service
+
+  sql-dapr:
+    image: "daprio/daprd:latest"
+    command: ["./daprd", "-app-id", "db", "-app-port", "1433", "-dapr-http-port", "3500", "-components-path", "../components"]
+    network_mode: "service:sql"
 
 networks:
   service:
