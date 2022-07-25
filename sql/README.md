@@ -5,27 +5,19 @@
 ### 1. Use docker-compose
 
 ```
-docker compose up
+docker compose up -d --build
 ```
 
-### 2. Open bash terminal in container
+## Note: .sh files MUST be LF file endings
+
+# Manual Database Creation
+
+### 1. Open bash terminal in container
 ```
 docker exec -it valorant-women-sql-1 "bash"
 ```
 
 ### 3. Set Username and Password
 ```
-/opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "<YourStrong@Passw0rd>"
-```
-
-### 4. Create database
-```
-CREATE DATABASE womenofvalorant
-GO
-```
-
-### 5. Exit
-```
-exit
-exit
+/opt/mssql-tools/bin/sqlcmd -S localhost -i InitializeDatabase.sql -U SA -P "$SA_PASSWORD"
 ```

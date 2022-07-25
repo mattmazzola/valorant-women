@@ -19,5 +19,6 @@
             "source.organizeImports": true,
             "source.fixAll": true
         }
-    }
+    },
+    "git.mergeEditor": true
 }

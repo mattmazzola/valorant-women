@@ -4,18 +4,22 @@ import fastify from "fastify"
 import invariant from 'tiny-invariant'
 import daprPlugin from './plugins/dapr'
 import ratings from './routes/ratings'
+import { delay } from "./utils"
 
-dotenv.config()
-
-process.on('unhandledRejection', error => {
-    throw error
-})
+const isProduction = process.env.NODE_ENV === 'production'
+console.log({ isProduction })
+if (!isProduction) {
+    dotenv.config()
+}
 
 const host = process.env.HOST
-invariant(typeof host === 'string')
+invariant(typeof host === 'string', `Environment variable HOST must be defined.`)
 
 const port = Number(process.env.PORT)
-invariant(typeof port === 'number')
+invariant(typeof port === 'number', `Environment variable PORT must be defined.`)
+
+const startDelay = Number(process.env.START_DELAY)
+invariant(typeof startDelay === 'number', `Environment variable startDelay must be defined.`)
 
 const server = fastify({
     logger: {
@@ -49,6 +53,9 @@ server.get('/', async () => {
 
 async function start() {
     try {
+        console.log(`API server started.`)
+        console.log(`Waiting ${startDelay} MS until SQL server finished starting...`)
+        await delay(startDelay)
         console.log(`http://localhost:${port}`)
         await server.listen({
             port,

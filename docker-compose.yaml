@@ -1,26 +1,33 @@
 version: '3.4'
 
 services:
-  # api:
-  #   build:
-  #     context: service
-  #     dockerfile: Dockerfile
-  #   environment:
-  #     - TYPEORM_HOST=valorant-women_service://sql
-  #     - TYPEORM_PORT=1433
-  #     - TYPEORM_USERNAME=SA
-  #     - TYPEORM_PASSWORD=<YourStrong@Passw0rd>
-  #   ports:
-  #     - "3002:3002"
-  #   networks:
-  #     - service
-  #   depends_on:
-  #     - sql
+  api:
+    build:
+      context: service
+      dockerfile: Dockerfile
+    environment:
+      - HOST=0.0.0.0
+      - PORT=3002
+      - START_DELAY=60000
+      - TYPEORM_HOST=host.docker.internal
+      - TYPEORM_PORT=1433
+      - TYPEORM_USERNAME=SA
+      - TYPEORM_PASSWORD=<YourStrong@Passw0rd>
+      - TYPEORM_DATABASE=womenofvalorant
+    ports:
+      - "3002:3002"
+    networks:
+      - service
+    depends_on:
+      - sql
 
   sql:
     build:
       context: sql
       dockerfile: Dockerfile
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=<YourStrong@Passw0rd>
     ports:
       - "1433:1433"
     networks:
