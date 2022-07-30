@@ -18,7 +18,7 @@ const plugin: fastify.FastifyPluginCallback = (fastify, pluginOptions, done) => 
             }
         },
         async (req, rep) => {
-            const isWomen = (req.query as any).gender === "men"
+            const isWomen = (req.query as any).gender !== "men"
 
             // https://docs.dapr.io/reference/api/state_api/#query-state
             // const ratings = await fastify.daprClient.state.query(STATE_STORE_NAME, {
@@ -45,7 +45,6 @@ const plugin: fastify.FastifyPluginCallback = (fastify, pluginOptions, done) => 
         '/',
         {
             schema: {
-                body: models.rating.InputSchema
             }
         },
         async (req, rep) => {
@@ -54,6 +53,8 @@ const plugin: fastify.FastifyPluginCallback = (fastify, pluginOptions, done) => 
             const agents = ratingInput.isWomen
                 ? constants.femaleAgents
                 : constants.maleAgents
+
+            console.log({ ratingInput, agents })
 
             const containsAllAgents = agents.every(agent => ratingInput.rankedAgentNames.includes(agent))
             if (!containsAllAgents) {
