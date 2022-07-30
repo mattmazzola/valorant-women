@@ -38,7 +38,7 @@ services:
 
   sql-dapr:
     image: "daprio/daprd:latest"
-    command: ["./daprd", "-app-id", "db", "-app-port", "1433", "-dapr-http-port", "3500", "-components-path", "../components"]
+    command: ["./daprd", "-app-id", "db", "-app-port", "1433", "-dapr-http-port", "3500", "-components-path", "components"]
     network_mode: "service:sql"
 
 networks:
