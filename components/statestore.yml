@@ -2,21 +2,9 @@ apiVersion: dapr.io/v1alpha1
 kind: Component
 metadata:
   name: statestore
-  namespace: mystore
 spec:
   type: state.sqlserver
   version: v1
   metadata:
   - name: connectionString
     value: Server=localhost;Port=1433;Database=womenofvalorant;User Id=SA;Password=<YourStrong@Passw0rd>;
-
-  # - name: tableName
-  #   value: <REPLACE-WITH-TABLE-NAME>  # Optional. defaults to "state"
-  # - name: keyType
-  #   value: <REPLACE-WITH-KEY-TYPE>  # Optional. defaults to "string"
-  # - name: keyLength
-  #   value: <KEY-LENGTH> # Optional. defaults to 200. Yo be used with "string" keyType
-  # - name: schema
-  #   value: <SCHEMA> # Optional. defaults to "dbo"
-  # - name: indexedProperties
-  #   value: <INDEXED-PROPERTIES> # Optional. List of IndexedProperties.
