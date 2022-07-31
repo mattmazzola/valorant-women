@@ -8,3 +8,5 @@ spec:
   metadata:
   - name: connectionString
     value: Server=localhost;Port=1433;Database=womenofvalorant;User Id=SA;Password=<YourStrong@Passw0rd>;
+  - name: tableName
+    value: valorantwomen

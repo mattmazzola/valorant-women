@@ -21,24 +21,24 @@ const plugin: fastify.FastifyPluginCallback = (fastify, pluginOptions, done) => 
             const isWomen = (req.query as any).gender !== "men"
 
             // https://docs.dapr.io/reference/api/state_api/#query-state
-            // const ratings = await fastify.daprClient.state.query(STATE_STORE_NAME, {
-            //     filter: {
-            //         EQ: {
-            //             "rating.isWomen": isWomen
-            //         }
-            //     },
-            //     sort: [
-            //         {
-            //             key: "createdAtMs",
-            //             order: "DESC"
-            //         }
-            //     ],
-            //     page: {
-            //         limit: 10
-            //     }
-            // })
+            const ratings = await fastify.daprClient.state.query(STATE_STORE_NAME, {
+                filter: {
+                    EQ: {
+                        "rating.isWomen": isWomen
+                    }
+                },
+                sort: [
+                    {
+                        key: "createdAtMs",
+                        order: "DESC"
+                    }
+                ],
+                page: {
+                    limit: 10
+                }
+            })
 
-            return []
+            return ratings
         })
 
     fastify.post(
