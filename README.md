@@ -6,3 +6,10 @@
     ```
     docker compose up
     ```
+
+
+## References
+
+### Dapr Docker Compose Sample
+
+https://github.com/dapr/samples/tree/master/hello-docker-compose

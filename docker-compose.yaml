@@ -19,9 +19,16 @@ services:
 
   api-dapr:
     image: "daprio/daprd:latest"
-    command: ["./daprd", "-app-id", "api", "-app-port", "3002", "-dapr-http-port", "3500", "-components-path", "E:\Repos\valorant-women\components"]
+    command: ["./daprd",
+      "-app-id", "api",
+      "-app-port", "3002",
+      "-dapr-http-port", "3500",
+      "-components-path", "./components"]
+    volumes:
+        - "./components/:/components"
     depends_on:
       - api
+      - sql
     network_mode: "service:api"
 
   sql:
@@ -36,10 +43,18 @@ services:
     networks:
       - service
 
-  sql-dapr:
-    image: "daprio/daprd:latest"
-    command: ["./daprd", "-app-id", "db", "-app-port", "1433", "-dapr-http-port", "3500", "-components-path", "E:/Repos/valorant-women/components"]
-    network_mode: "service:sql"
+  # sql-dapr:
+  #   image: "daprio/daprd:latest"
+  #   command: ["./daprd",
+  #     "-app-id", "sql",
+  #     "-app-port", "1433",
+  #     "-dapr-http-port", "3500",
+  #     "-components-path", "./components"]
+  #   volumes:
+  #       - "./components/:/components"
+  #   depends_on:
+  #     - sql
+  #   network_mode: "service:sql"
 
 networks:
   service:
