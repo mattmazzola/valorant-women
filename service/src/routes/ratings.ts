@@ -80,6 +80,8 @@ const plugin: fastify.FastifyPluginCallback = (fastify, pluginOptions, done) => 
                 }
             ])
 
+            console.log('Saved counter value', { rating })
+
             return rating
         })
 

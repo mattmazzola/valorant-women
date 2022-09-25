@@ -3,8 +3,14 @@ kind: Component
 metadata:
   name: statestore
 spec:
-  type: state.sqlserver
+  type: state.redis
   version: v1
   metadata:
-  - name: connectionString
-    value: Server=localhost;Port=1433;Database=womenofvalorant;User Id=SA;Password=<YourStrong@Passw0rd>;
+    - name: redisHost
+      value: redis:6379
+    - name: redisPassword
+      secretKeyRef:
+        name: redis-password
+        key:  redisPassword
+auth:
+  secretStore: secretstore

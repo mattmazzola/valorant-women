@@ -10,13 +10,6 @@ const plugin: fastify.FastifyPluginCallback = async (instance, pluginOptions, do
     const daprHost = process.env.DAPR_HOST
     const daprPort = process.env.DAPR_HTTP_PORT
 
-    instance.log.info({ env: process.env })
-    instance.log.info(`
-    Connecting to SQL server:
-\t - server: ${daprHost}
-\t - port: ${daprPort}
-    `)
-
     invariant(typeof daprHost === 'string', `env var DAPR_HOST must be a string`)
     invariant(typeof daprPort === 'string', `env var DAPR_HTTP_PORT must be a string`)
 

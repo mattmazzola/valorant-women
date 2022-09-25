@@ -8,14 +8,11 @@ services:
     environment:
       - HOST=0.0.0.0
       - PORT=3002
-      - START_DELAY=60000
       - DAPR_HTTP_PORT=3500
     ports:
       - "3002:3002"
     networks:
-      - service
-    depends_on:
-      - sql
+      - valorantnetwork
 
   api-dapr:
     image: "daprio/daprd:latest"
@@ -23,38 +20,18 @@ services:
       "-app-id", "api",
       "-app-port", "3002",
       "-dapr-http-port", "3500",
+      "-log-level", "debug",
       "-components-path", "./components"]
     volumes:
         - "./components/:/components"
     depends_on:
       - api
-      - sql
     network_mode: "service:api"
 
-  sql:
-    build:
-      context: sql
-      dockerfile: Dockerfile
-    environment:
-      - ACCEPT_EULA=Y
-      - SA_PASSWORD=<YourStrong@Passw0rd>
-    ports:
-      - "1433:1433"
+  redis:
+    image: "redis:7"
     networks:
-      - service
-
-  # sql-dapr:
-  #   image: "daprio/daprd:latest"
-  #   command: ["./daprd",
-  #     "-app-id", "sql",
-  #     "-app-port", "1433",
-  #     "-dapr-http-port", "3500",
-  #     "-components-path", "./components"]
-  #   volumes:
-  #       - "./components/:/components"
-  #   depends_on:
-  #     - sql
-  #   network_mode: "service:sql"
+      - valorantnetwork
 
 networks:
-  service:
+  valorantnetwork:

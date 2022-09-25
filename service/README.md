@@ -30,6 +30,23 @@ docker run -it -p 3002:3002 service
 }
 ```
 
+## Start DB
+```
+docker run -e 'ACCEPT_EULA=Y' -e 'MSSQL_SA_PASSWORD=<YourStrong@Passw0rd>' -p 5433:1433 --name sql1 -d mcr.microsoft.com/mssql/server:2019-latest
+```
+```
+docker exec -it sql1 "bash"
+```
+
+```
+/opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "<YourStrong@Passw0rd>"
+```
+
+```
+CREATE DATABASE womenofvalorant
+GO
+```
+
 ### Restarting the Database
 
 If you ever stop the container you can start it back up by simply starting it instead attempting to build and pull the images
