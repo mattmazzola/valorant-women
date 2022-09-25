@@ -27,16 +27,10 @@ const plugin: fastify.FastifyPluginCallback = (fastify, pluginOptions, done) => 
                         "rating.isWomen": isWomen
                     }
                 },
-                sort: [
-                    {
-                        key: "createdAtMs",
-                        order: "DESC"
-                    }
-                ],
                 page: {
                     limit: 10
                 }
-            })
+            } as any)
 
             return ratings
         })
