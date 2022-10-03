@@ -3,8 +3,15 @@ kind: Component
 metadata:
   name: statestore
 spec:
-  type: state.sqlserver
+  type: state.azure.cosmosdb
   version: v1
+  initTimeout: 5m
   metadata:
-  - name: connectionString
-    value: Server=localhost; User Id=SA; Password=<YourStrong@Passw0rd>; Trusted_Connection=True;
+  - name: url
+    value: https://dapr-db.documents.azure.com:443/
+  - name: masterKey
+    value: 8HUxwbfZdTq0CofyMz5tcLKou89adRqhl9PxQKtyl0oI1KgXhgQCjWwbG1TfSWZXQi3SiQCFH8KWMu6gvWaFxg==
+  - name: database
+    value: valorantwomen
+  - name: collection
+    value: ratings

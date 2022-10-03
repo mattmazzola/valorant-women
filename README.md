@@ -10,9 +10,14 @@
 
 ## References
 
+### Azure Cosmos DB State Store Configuration
+
+https://docs.dapr.io/reference/components-reference/supported-state-stores/setup-azure-cosmosdb/
+
 ### Dapr Docker Compose Sample
 
-https://github.com/dapr/samples/tree/master/hello-docker-compose'
+https://github.com/dapr/samples/tree/master/hello-docker-compose
+
 
 https://docs.dapr.io/reference/components-reference/supported-state-stores/setup-redis/#querying-json-objects-optional
 

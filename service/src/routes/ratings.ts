@@ -1,3 +1,4 @@
+import { StateQueryType } from '@dapr/dapr/types/state/StateQuery.type'
 import * as fastify from 'fastify'
 import { v4 as uuidV4 } from 'uuid'
 import * as constants from '../constants'
@@ -20,17 +21,12 @@ const plugin: fastify.FastifyPluginCallback = (fastify, pluginOptions, done) => 
         async (req, rep) => {
             const isWomen = (req.query as any).gender !== "men"
 
+            const query: StateQueryType = {} as any
+            
             // https://docs.dapr.io/reference/api/state_api/#query-state
-            const ratings = await fastify.daprClient.state.query(STATE_STORE_NAME, {
-                filter: {
-                    EQ: {
-                        "rating.isWomen": isWomen
-                    }
-                },
-                page: {
-                    limit: 10
-                }
-            } as any)
+            const ratings = await fastify.daprClient.state.query(STATE_STORE_NAME, query)
+
+            console.log({ query, ratings })
 
             return ratings
         })
