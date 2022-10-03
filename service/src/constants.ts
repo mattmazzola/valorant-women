@@ -1,4 +1,5 @@
 export const STATE_STORE_NAME = "statestore"
+export const SECRET_STORE_NAME = "localsecretstore";
 
 export const femaleAgents = [
     'killjoy',
