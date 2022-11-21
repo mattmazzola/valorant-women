@@ -1,4 +1,5 @@
 node_modules/
 build/
+httpRequests/
 
-*.env*.local
+*.env*

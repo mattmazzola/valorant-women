@@ -1,0 +1,159 @@
+.rating {
+    border: 2px solid var(--red-highlight, red);
+    border-radius: 1rem;
+    background: var(--dark-bg);
+    overflow: hidden;
+}
+
+.rating.disabled {
+    border-color: var(--red-highlight-disabled);
+}
+
+.rating.disabled .listHeader {
+    background-color: var(--red-highlight-disabled);
+}
+
+.rating .registration {
+    padding: 3em;
+    display: flex;
+    flex-direction: column;
+    gap: 2em;
+}
+
+.registration .controls {
+    display: flex;
+    flex-direction: row;
+    gap: 2em;
+    justify-content: center;
+}
+
+.registration .user-alias {
+    border: 2px solid var(--red-highlight, red);
+    border-radius: 0.5rem;
+    font-size: 2rem;
+    padding: 0.5rem 1rem;
+}
+
+.listHeader {
+    display: grid;
+    grid-template-columns: max-content 1fr max-content 1fr max-content;
+    background: var(--red-highlight);
+    /* border-top-left-radius: 1rem; */
+    /* border-top-right-radius: 1rem; */
+    grid-gap: 1em;
+    padding: 0.5rem 1rem;
+    align-items: center;
+
+    font-size: 2rem;
+
+    color: black;
+}
+
+.listHeader>div:first-child {
+    text-align: left;
+}
+
+.listHeader>div:last-child {
+    text-align: right;
+}
+
+.list {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-gap: .75rem;
+    list-style: none;
+    padding: 0.5rem;
+    padding-top: calc(0.5rem + 2px);
+    margin: 0;
+    background-color: var(--dark-bg);
+}
+
+.list[data-agents="7"] {
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.list[data-agents="6"] {
+    grid-template-columns: repeat(6, 1fr);
+}
+
+.ranks {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-gap: 1em;
+    justify-content: center;
+    text-align: center;
+    /* background-color: var(--ranks-bg); */
+    /* color: white; */
+    font-size: 4rem;
+    font-weight: bold;
+    padding: 0.5rem;
+}
+
+.ranks[data-agents="7"] {
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.ranks[data-agents="6"] {
+    grid-template-columns: repeat(6, 1fr);
+}
+
+.agent {
+    --border-color: rgb(197, 136, 136);
+    --bg: rgb(50, 55, 66);
+
+    padding: 1em 0;
+    border: 2px solid var(--border-color);
+    border-radius: .5rem;
+    background-color: var(--bg);
+}
+
+.agent2 {
+    padding: 1em 0;
+}
+
+.agent2:first-child {
+    border-bottom-left-radius: 0.5rem;
+}
+
+.agent2:last-child {
+    border-bottom-right-radius: 0.5rem;
+}
+
+.rating-form {
+    font-size: 3rem;
+    margin: 2rem;
+}
+
+.rating-form input {
+    font-size: 3rem;
+    width: 15ch;
+    margin: 1rem 2rem;
+    padding: 1rem;
+
+    border: 2px solid var(--red-highlight);
+    border-radius: 0.5rem;
+    color: var(--red-highlight);
+
+    background-color: var(--dark-bg);
+}
+
+.rating-form button {
+    font-size: 3rem;
+    padding: 1rem 0.5em;
+    border-radius: 0.5rem;
+
+    background-color: var(--red-highlight);
+    border: 2px solid var(--red-highlight);
+    cursor: pointer;
+    color: var(--color-white);
+}
+
+.name {
+    text-align: center;
+    font-size: 2rem;
+    color: lightgray;
+}
+
+.list img {
+    max-width: calc(100vw / 9);
+}

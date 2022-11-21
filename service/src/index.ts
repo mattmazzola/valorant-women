@@ -1,53 +1,73 @@
-import "reflect-metadata"
+import fastifyCors from "@fastify/cors"
+import dotenv from "dotenv-flow"
 import fastify from "fastify"
-import fastifyCors from "fastify-cors"
-import dotenv from "dotenv"
-import plugin from "./plugins/orm"
+import invariant from 'tiny-invariant'
+import cosmosPlugin from './plugins/cosmos'
+import daprPlugin from './plugins/dapr'
 import ratings from './routes/ratings'
+import secrets from './routes/secrets'
 
-dotenv.config()
+const isProduction = process.env.NODE_ENV === 'production'
+console.log({ isProduction })
+if (!isProduction) {
+    dotenv.config()
+}
 
-process.on('unhandledRejection', error => {
-    throw error
+const host = process.env.HOST
+invariant(typeof host === 'string', `Environment variable HOST must be defined.`)
+
+const port = Number(process.env.PORT)
+invariant(typeof port === 'number', `Environment variable PORT must be defined.`)
+
+const server = fastify({
+    logger: {
+        transport: {
+            target: 'pino-pretty',
+            options: {
+                colorize: true,
+                destination: 1
+            }
+        }
+        // redact: ['req.headers.authorization'],
+    },
+    caseSensitive: false,
 })
 
-const hostname = '0.0.0.0'
-const defaultPort = 3002
-const port = process.env.PORT ?? defaultPort
-
-async function main() {
-
-    const server = fastify({
-        logger: {
-            // redact: ['req.headers.authorization'],
-            prettyPrint: true,
-            // level: ['info']
-        },
-        caseSensitive: false,
+server.register(cosmosPlugin)
+    .after(err => {
+        if (err) throw err
     })
 
-    server.register(plugin)
-        .after(err => {
-            if (err) throw err
-        })
-
-    server.register(fastifyCors)
-    server.register(ratings, { prefix: '/ratings' })
-
-    server.get('/routes', async () => {
-        return server.printRoutes()
+server.register(daprPlugin)
+    .after(err => {
+        if (err) throw err
     })
 
-    server.get('/', async (request, reply) => {
-        return `Women of Valorant server running... ${new Date().toLocaleDateString('en-us')}`
-    })
+server.register(fastifyCors)
+server.register(ratings, { prefix: '/ratings' })
+server.register(secrets, { prefix: '/secrets' })
 
+server.get('/info/routes', async () => {
+    return server.printRoutes()
+})
+
+server.get('/', async () => {
+    return `Women of Valorant server running... ${new Date().toLocaleDateString('en-us')}`
+})
+
+async function start() {
     try {
-        await server.listen(port, hostname)
+        console.log(`API server started.`)
+        console.log(`http://localhost:${port}`)
+        await server.listen({
+            port,
+            host,
+        })
     } catch (err) {
-        server.log.error(err)
+        const error = err as Error
+        server.log.error(error.message)
         process.exit(1)
     }
 }
 
-main()
+start()

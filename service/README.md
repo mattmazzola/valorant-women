@@ -1,40 +1,17 @@
 # Service
 
-## Steps to start MSSQL database container
+## Start up
 
-### 1. Run container
+1. Start the SQL service
+  - This service attempts to connect to the SQL database so it must be running
 
-```powershell
-docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=<YourStrong@Passw0rd>" `
-   -p 1433:1433 --name sql1 `
-   -d mcr.microsoft.com/mssql/server:2019-GA-ubuntu-16.04
+## Running as container
+
+```
+docker build -t service .
+docker run -it -p 3002:3002 service
 ```
 
-### 2. Create database
-
-#### 2.a Interactive bash prompt within container
-
-```powershell
-docker exec -it sql1 "bash"
-```
-
-#### 2.b Start SQL Cmd tools to run T-SQL commands
-
-```bash
-/opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "<YourStrong@Passw0rd>"
-```
-
-#### 2.c Create database
-
-```sql
-CREATE DATABASE womenofvalorant
-GO
-```
-
-#### 2.d Exit terminals
-
-- exit T-SQL
-- exit Bash
 
 #### 2.e Create Type ORM Connection file
 
@@ -51,6 +28,23 @@ GO
    "password": "<YourStrong@Passw0rd>",
    "database": "womenofvalorant"
 }
+```
+
+## Start DB
+```
+docker run -e 'ACCEPT_EULA=Y' -e 'MSSQL_SA_PASSWORD=<YourStrong@Passw0rd>' -p 5433:1433 --name sql1 -d mcr.microsoft.com/mssql/server:2019-latest
+```
+```
+docker exec -it sql1 "bash"
+```
+
+```
+/opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "<YourStrong@Passw0rd>"
+```
+
+```
+CREATE DATABASE womenofvalorant
+GO
 ```
 
 ### Restarting the Database
@@ -90,6 +84,7 @@ See: https://stackoverflow.com/questions/52823025/azure-container-did-not-start-
 # Note
 
 Could not get the `ormconfig.json` to be recognized in Azure so it uses environment variables
+
 # Links
 
 ## MS SQL
@@ -99,12 +94,6 @@ Could not get the `ormconfig.json` to be recognized in Azure so it uses environm
 - https://docs.microsoft.com/en-us/dotnet/architecture/microservices/multi-container-microservice-net-applications/database-server-container
 - https://hub.docker.com/_/microsoft-mssql-server
 - https://docs.microsoft.com/en-us/sql/linux/quickstart-install-connect-docker?view=sql-server-ver15&pivots=cs1-powershell
-
-## MySQL
-
-```powershell
-docker run -p 9000:3306 --name mysql4 -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=db1 -e MYSQL_ROOT_HOST=% -d mysql/mysql-server:latest
-```
 
 ## TypeORM Notes
 

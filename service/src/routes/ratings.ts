@@ -1,12 +1,10 @@
+import { SqlQuerySpec } from '@azure/cosmos'
 import * as fastify from 'fastify'
-import * as models from "../models"
-import { Rating } from '../entity'
+import { v4 as uuidV4 } from 'uuid'
 import * as constants from '../constants'
-
-type agentType = "women" | "men"
+import * as models from "../models"
 
 const plugin: fastify.FastifyPluginCallback = (fastify, pluginOptions, done) => {
-    const connection = fastify.connection
 
     fastify.get(
         '/',
@@ -20,28 +18,42 @@ const plugin: fastify.FastifyPluginCallback = (fastify, pluginOptions, done) => 
             }
         },
         async (req, rep) => {
-            const isWomen = (req.query as any).gender === "men"
-                ? false : true
-            const ratings = await connection.manager.find(Rating, { where: { isWomen } })
+            const isWomen = (req.query as any).gender !== "men"
 
-            return ratings
+            const selectRatingsOfGender: SqlQuerySpec = {
+                query: "SELECT * FROM ratings r WHERE r.isWomen = @isWomen",
+                parameters: [
+                    { name: "@isWomen", value: isWomen }
+                ]
+            }
+
+            console.log({ selectRatingsOfGender })
+
+            const ratingsResponse = await fastify.cosmosContainer.items
+                .query<models.rating.Output>(selectRatingsOfGender)
+                .fetchAll()
+
+            console.log({ ratingsResponse })
+
+            return ratingsResponse.resources
         })
 
     fastify.post(
         '/',
         {
             schema: {
-                body: models.rating.InputSchema
             }
         },
         async (req, rep) => {
             const ratingInput = req.body as models.rating.Input
 
-            const agents = ratingInput.isWomen
+            const expectedAgentNames = ratingInput.isWomen
                 ? constants.femaleAgents
                 : constants.maleAgents
 
-            const containsAllAgents = agents.every(agent => ratingInput.rankedAgentNames.includes(agent))
+            console.log({ ratingInput, expectedAgentNames })
+
+            const containsAllAgents = expectedAgentNames.every(agent => ratingInput.rankedAgentNames.includes(agent))
             if (!containsAllAgents) {
                 rep.code(400)
 
@@ -52,14 +64,17 @@ const plugin: fastify.FastifyPluginCallback = (fastify, pluginOptions, done) => 
                 }
             }
 
-            const ratingEntity = new Rating()
-            ratingEntity.userName = ratingInput.userName
-            ratingEntity.isWomen = ratingInput.isWomen
-            ratingEntity.rankedAgentNames = ratingInput.rankedAgentNames
+            const rating: models.rating.Output = {
+                ...ratingInput,
+                id: uuidV4(),
+                createdAtMs: Date.now()
+            }
 
-            const savedRating = await connection.manager.save(ratingEntity)
+            const savedRating = await fastify.cosmosContainer.items.create(rating);
 
-            return savedRating
+            console.log('Saved rating', { savedRating })
+
+            return savedRating.resource
         })
 
     done()

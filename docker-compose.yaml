@@ -1,0 +1,59 @@
+version: '3.4'
+
+services:
+  client:
+    build:
+      context: client-remix
+      dockerfile: Dockerfile
+    environment:
+      - PORT=${CLIENT_PORT}
+      - DAPR_HTTP_PORT=${DAPR_HTTP_PORT}
+      - API_URL=http://host.docker.internal:${API_PORT}
+    ports:
+      - "${CLIENT_PORT}:${CLIENT_PORT}"
+    networks:
+      - valorantnetwork
+
+  client-dapr:
+    image: "daprio/daprd:latest"
+    command: ["./daprd",
+      "-app-id", "client",
+      "-app-port", "${CLIENT_PORT}",
+      "-dapr-http-port", "${DAPR_HTTP_PORT}",
+      "-log-level", "debug",
+      "-components-path", "./components"]
+
+  api:
+    build:
+      context: service
+      dockerfile: Dockerfile
+    environment:
+      - HOST=${API_HOST}
+      - PORT=${API_PORT}
+      - DAPR_HTTP_PORT=${DAPR_HTTP_PORT}
+      - COSMOSDB_ACCOUNT=${COSMOSDB_ACCOUNT}
+      - COSMOSDB_KEY=${COSMOSDB_KEY}
+      - COSMOSDB_DATABASE_ID=${COSMOSDB_DATABASE_ID}
+      - COSMOSDB_CONTAINER_ID=${COSMOSDB_CONTAINER_ID}
+    ports:
+      - "${API_PORT}:${API_PORT}"
+    networks:
+      - valorantnetwork
+
+  api-dapr:
+    image: "daprio/daprd:latest"
+    command: ["./daprd",
+      "-app-id", "api",
+      "-app-port", "${API_PORT}",
+      "-dapr-http-port", "${API_PORT}",
+      "-log-level", "debug",
+      "-components-path", "./components"]
+    volumes:
+        - "./components/:/components"
+        - "./secrets/:/secrets"
+    depends_on:
+      - api
+    network_mode: "service:api"
+
+networks:
+  valorantnetwork:
