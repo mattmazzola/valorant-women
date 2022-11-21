@@ -30,6 +30,7 @@ services:
     environment:
       - HOST=${API_HOST}
       - PORT=${API_PORT}
+      - DAPR_HOST=${DAPR_HOST}
       - DAPR_HTTP_PORT=${DAPR_HTTP_PORT}
       - COSMOSDB_ACCOUNT=${COSMOSDB_ACCOUNT}
       - COSMOSDB_KEY=${COSMOSDB_KEY}
