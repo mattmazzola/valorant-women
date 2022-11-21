@@ -5,13 +5,15 @@ import StaticRatings from '~/components/StaticRatings'
 import { femaleAgents } from '~/constants'
 import { getAgentNamesSortedByRating } from "~/helpers"
 import { SavedSubmission } from '~/models'
+import { getRatings } from "~/service/ratingsService"
 
 type LoaderData = {
     submissions: SavedSubmission[]
 }
 
-export const loader: LoaderFunction = async ({ request }) => {
-    const submissions: SavedSubmission[] = []
+export const loader: LoaderFunction = async () => {
+    const women = await getRatings("women")
+    const submissions = women
 
     return {
         submissions,

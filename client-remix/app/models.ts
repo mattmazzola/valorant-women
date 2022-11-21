@@ -10,7 +10,7 @@ export type SavedSubmission =
         id: number
         userId: string
         userName: string
-        createdAt: string
+        createdAtMs: string
     }
 
 export type Resolved<T> =

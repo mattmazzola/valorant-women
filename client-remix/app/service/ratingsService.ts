@@ -4,8 +4,8 @@ import { Submission } from "~/models"
 invariant(typeof process.env.API_URL === 'string', `env.API_URL must be a non-empty string`)
 const apiBaseUrl = process.env.API_URL
 
-export async function getRatings() {
-    const request = await fetch(`${apiBaseUrl}/ratings`)
+export async function getRatings(sex: "men" | "women") {
+    const request = await fetch(`${apiBaseUrl}/ratings?gender=${sex}`)
     const json = await request.json()
 
     return json
