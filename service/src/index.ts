@@ -5,7 +5,6 @@ import invariant from 'tiny-invariant'
 import cosmosPlugin from './plugins/cosmos'
 import daprPlugin from './plugins/dapr'
 import ratings from './routes/ratings'
-import secrets from './routes/secrets'
 
 const isProduction = process.env.NODE_ENV === 'production'
 console.log({ isProduction })
@@ -45,7 +44,6 @@ server.register(daprPlugin)
 
 server.register(fastifyCors)
 server.register(ratings, { prefix: '/ratings' })
-server.register(secrets, { prefix: '/secrets' })
 
 server.get('/info/routes', async () => {
     return server.printRoutes()
