@@ -33,8 +33,6 @@ const plugin: fastify.FastifyPluginCallback = (fastify, pluginOptions, done) => 
                 .query<models.rating.Output>(selectRatingsOfGender)
                 .fetchAll()
 
-            console.log({ resources: ratingsResponse.resources })
-
             return ratingsResponse.resources
         })
 
