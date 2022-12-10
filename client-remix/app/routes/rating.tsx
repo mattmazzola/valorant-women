@@ -80,7 +80,7 @@ export const action: ActionFunction = async ({ request }) => {
 
         console.log(`Set credentialId on session`, { searchParams: url.searchParams.toString() })
 
-        return redirect(`rating?${url.searchParams}`, {
+        return redirect(`/rating?${url.searchParams}`, {
             headers: {
                 "Set-Cookie": await commitSession(session),
             },
@@ -91,7 +91,7 @@ export const action: ActionFunction = async ({ request }) => {
         session.set("errorType", formData.type)
         session.set("errorMessage", formData.errorMessage)
 
-        return redirect(`rating?${url.searchParams}`, {
+        return redirect(`/rating?${url.searchParams}`, {
             headers: {
                 "Set-Cookie": await commitSession(session),
             },
@@ -102,7 +102,7 @@ export const action: ActionFunction = async ({ request }) => {
         session.set("errorType", formData.type)
         session.set("errorMessage", formData.errorMessage)
 
-        return redirect(`rating?${url.searchParams}`, {
+        return redirect(`/rating?${url.searchParams}`, {
             headers: {
                 "Set-Cookie": await commitSession(session),
             },
@@ -113,7 +113,7 @@ export const action: ActionFunction = async ({ request }) => {
         session.unset("errorType")
         session.unset("errorMessage")
 
-        return redirect(`rating?${url.searchParams}`, {
+        return redirect(`/rating?${url.searchParams}`, {
             headers: {
                 "Set-Cookie": await commitSession(session),
             },
