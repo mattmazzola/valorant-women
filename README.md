@@ -37,5 +37,5 @@ az group create -l westus3 -g wov
 ### Execute Deployment
 
 ```azcli
-az deployment group create -g wov -f main.bicep --what-if
+az deployment group create -g wov -f ./bicep/main.bicep --what-if
 ```
