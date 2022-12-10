@@ -21,6 +21,14 @@ export const links: LinksFunction = () => [
     { rel: 'stylesheet', href: ratingStyles },
 ]
 
+enum FormSubmissionOutcomes {
+    RegistrationError = 'RegistrationError',
+    RegistrationSuccess = 'RegistrationSuccess',
+    SignInError = 'SignInError',
+    SignInSuccess = 'SignInSuccess',
+    SubmitRating = 'SubmitRating',
+}
+
 type LoaderData = {
     activeSex: string
     username?: string
@@ -64,7 +72,7 @@ export const action: ActionFunction = async ({ request }) => {
     const url = new URL(request.url)
     const session = await getSession(request.headers.get("Cookie"))
 
-    if (formName === "registration") {
+    if (formName === FormSubmissionOutcomes.RegistrationSuccess) {
         session.set('username', formData.username)
         session.set('credentialId', formData.credentialId)
         session.unset("errorType")
@@ -78,7 +86,7 @@ export const action: ActionFunction = async ({ request }) => {
             },
         })
     }
-    else if (formName === "registrationError") {
+    else if (formName === FormSubmissionOutcomes.RegistrationError) {
         console.log(`REGISTRAION ERROR`)
         session.set("errorType", formData.type)
         session.set("errorMessage", formData.errorMessage)
@@ -89,7 +97,7 @@ export const action: ActionFunction = async ({ request }) => {
             },
         })
     }
-    else if (formName === "signInError") {
+    else if (formName === FormSubmissionOutcomes.SignInError) {
         console.log(`SIGN-IN ERROR`)
         session.set("errorType", formData.type)
         session.set("errorMessage", formData.errorMessage)
@@ -100,8 +108,8 @@ export const action: ActionFunction = async ({ request }) => {
             },
         })
     }
-    else if (formName === "signIn") {
         session.set('signature', formData.signature)
+    else if (formName === FormSubmissionOutcomes.SignInSuccess) {
         session.unset("errorType")
         session.unset("errorMessage")
 
@@ -111,7 +119,7 @@ export const action: ActionFunction = async ({ request }) => {
             },
         })
     }
-    else if (formName === "submitRating") {
+    else if (formName === FormSubmissionOutcomes.SubmitRating) {
         const ratingInput = getSubmissionFromObject(formData)
         const savedRating = await postRating(ratingInput)
 
@@ -157,7 +165,7 @@ export default function RatingRoute() {
     const onSubmitRating = (submission: Submission) => {
         const submissionFormData = getObjectFromSubmission(submission)
         const data = {
-            name: "submitRating",
+            name: FormSubmissionOutcomes.SubmitRating,
             ...submissionFormData
         }
 
@@ -189,7 +197,7 @@ export default function RatingRoute() {
             const credentialId = webAuthNResponse.credential.id
 
             registrationFetcher.submit({
-                name: "registration",
+                name: FormSubmissionOutcomes.RegistrationSuccess,
                 username,
                 credentialId,
             }, {
@@ -200,7 +208,7 @@ export default function RatingRoute() {
             const error = e as Error
 
             registrationFetcher.submit({
-                name: "registrationError",
+                name: FormSubmissionOutcomes.RegistrationError,
                 errorType: error.name,
                 errorMessage: error.message,
             }, {
@@ -222,7 +230,7 @@ export default function RatingRoute() {
             })
 
             signInFetcher.submit({
-                name: "signIn",
+                name: FormSubmissionOutcomes.SignInSuccess,
                 signature: loginResponse.signature,
             }, {
                 method: 'post'
@@ -232,7 +240,7 @@ export default function RatingRoute() {
             const error = e as Error
 
             signInFetcher.submit({
-                name: "signInError",
+                name: FormSubmissionOutcomes.SignInError,
                 errorType: error.name,
                 errorMessage: error.message,
             }, {
