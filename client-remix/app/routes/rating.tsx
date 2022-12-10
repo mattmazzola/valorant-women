@@ -135,8 +135,10 @@ export default function RatingRoute() {
     const registrationFetcher = useFetcher()
     const signInFetcher = useFetcher()
     const ratingFetcher = useFetcher()
-    const { activeSex, username, credentialId, signature, errorMessage, errorType } = useLoaderData<LoaderData>()
-    console.log({ activeSex, username, credentialId, signature, errorMessage, errorType })
+    const loaderData = useLoaderData<LoaderData>()
+    console.log({ loaderData })
+    const { activeSex, username, credentialId, signature, errorMessage, errorType } = loaderData
+
     const [searchParams] = useSearchParams()
     const navigate = useNavigate()
     const [isWebAuthNAvailable, setIsWebAuthNAvailable] = React.useState(false)
@@ -181,6 +183,11 @@ export default function RatingRoute() {
         switch (e.key) {
             case 'Escape': {
                 setUserAlias('')
+                break
+            }
+            case 'Enter': {
+                onClickRegister(userAlias)
+                break
             }
         }
     }
@@ -189,16 +196,19 @@ export default function RatingRoute() {
         const uuid = window.crypto.randomUUID()
 
         try {
-            const webAuthNResponse = await webauthn.register(userName, uuid, {
+            const registerResonse = await webauthn.register(userName, uuid, {
                 debug: true
             })
 
-            const username = webAuthNResponse.username
-            const credentialId = webAuthNResponse.credential.id
+            console.log({ registerResonse })
+
+            const username = registerResonse.username
+            const credentialId = registerResonse.credential.id
 
             registrationFetcher.submit({
                 name: FormSubmissionOutcomes.RegistrationSuccess,
                 username,
+                publicKey: registerResonse.publicKey,
                 credentialId,
             }, {
                 method: 'post'
@@ -228,6 +238,8 @@ export default function RatingRoute() {
             const loginResponse = await webauthn.login(credentialIds, uuid, {
                 debug: true,
             })
+
+            console.log({ loginResponse })
 
             signInFetcher.submit({
                 name: FormSubmissionOutcomes.SignInSuccess,
