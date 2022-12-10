@@ -40,16 +40,6 @@ export const loader: LoaderFunction = async ({ request }) => {
     const errorType = session.get('errorType')
     const errorMessage = session.get('errorMessage')
 
-    console.log(
-        `loader`,
-        request.url,
-        {
-            activeSex,
-            username,
-            credentialId,
-            signature,
-        })
-
     return json<LoaderData>(
         {
             activeSex,
@@ -71,8 +61,6 @@ export const action: ActionFunction = async ({ request }) => {
     const rawFormData = await request.formData()
     const formData = Object.fromEntries(rawFormData)
     const formName = formData.name as string
-    console.log(`#ACTION`, request.url, formName, { formData })
-
     const url = new URL(request.url)
     const session = await getSession(request.headers.get("Cookie"))
 
@@ -218,8 +206,6 @@ export default function RatingRoute() {
             }, {
                 method: 'post'
             })
-
-            console.error({ error })
         }
     }
 
@@ -235,7 +221,6 @@ export default function RatingRoute() {
                 debug: true,
             })
 
-            console.log({ loginResponse })
             signInFetcher.submit({
                 name: "signIn",
                 signature: loginResponse.signature,
@@ -253,8 +238,6 @@ export default function RatingRoute() {
             }, {
                 method: 'post'
             })
-
-            console.error({ error })
         }
     }
 
