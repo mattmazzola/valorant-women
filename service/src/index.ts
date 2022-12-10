@@ -45,6 +45,10 @@ server.register(daprPlugin)
 server.register(fastifyCors)
 server.register(ratings, { prefix: '/ratings' })
 
+server.get('/info', async (req, res) => {
+    return res.redirect(301, '/info/routes')
+})
+
 server.get('/info/routes', async () => {
     return server.printRoutes()
 })
