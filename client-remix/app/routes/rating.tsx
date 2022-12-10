@@ -108,8 +108,8 @@ export const action: ActionFunction = async ({ request }) => {
             },
         })
     }
-        session.set('signature', formData.signature)
     else if (formName === FormSubmissionOutcomes.SignInSuccess) {
+        session.set('signature', formData.signature)
         session.unset("errorType")
         session.unset("errorMessage")
 
