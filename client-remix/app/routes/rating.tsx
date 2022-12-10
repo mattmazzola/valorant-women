@@ -69,63 +69,48 @@ export const action: ActionFunction = async ({ request }) => {
     const rawFormData = await request.formData()
     const formData = Object.fromEntries(rawFormData)
     const formName = formData.name as string
+    const formOutcome = formName as FormSubmissionOutcomes
     const url = new URL(request.url)
     const session = await getSession(request.headers.get("Cookie"))
 
-    if (formName === FormSubmissionOutcomes.RegistrationSuccess) {
-        session.set('username', formData.username)
-        session.set('credentialId', formData.credentialId)
-        session.unset("errorType")
-        session.unset("errorMessage")
-
-        console.log(`Set credentialId on session`, { searchParams: url.searchParams.toString() })
-
-        return redirect(`/rating?${url.searchParams}`, {
-            headers: {
-                "Set-Cookie": await commitSession(session),
-            },
-        })
-    }
-    else if (formName === FormSubmissionOutcomes.RegistrationError) {
-        console.log(`REGISTRAION ERROR`)
-        session.set("errorType", formData.type)
-        session.set("errorMessage", formData.errorMessage)
-
-        return redirect(`/rating?${url.searchParams}`, {
-            headers: {
-                "Set-Cookie": await commitSession(session),
-            },
-        })
-    }
-    else if (formName === FormSubmissionOutcomes.SignInError) {
-        console.log(`SIGN-IN ERROR`)
-        session.set("errorType", formData.type)
-        session.set("errorMessage", formData.errorMessage)
-
-        return redirect(`/rating?${url.searchParams}`, {
-            headers: {
-                "Set-Cookie": await commitSession(session),
-            },
-        })
-    }
-    else if (formName === FormSubmissionOutcomes.SignInSuccess) {
-        session.set('signature', formData.signature)
-        session.unset("errorType")
-        session.unset("errorMessage")
-
-        return redirect(`/rating?${url.searchParams}`, {
-            headers: {
-                "Set-Cookie": await commitSession(session),
-            },
-        })
-    }
-    else if (formName === FormSubmissionOutcomes.SubmitRating) {
+    console.log(formName.toUpperCase())
+    if (formName === FormSubmissionOutcomes.SubmitRating) {
         const ratingInput = getSubmissionFromObject(formData)
         const savedRating = await postRating(ratingInput)
 
         return {
             savedRating
         }
+    }
+    // If known form submission
+    else if (Object.keys(FormSubmissionOutcomes).includes(formOutcome)) {
+        // If error, set error data
+        if ([FormSubmissionOutcomes.SignInError, FormSubmissionOutcomes.RegistrationError].includes(formOutcome)) {
+            session.set("errorType", formData.type)
+            session.set("errorMessage", formData.errorMessage)
+        }
+        // If success, set success data based on type
+        else if ([FormSubmissionOutcomes.RegistrationSuccess, FormSubmissionOutcomes.SignInSuccess].includes(formOutcome)) {
+            if (formName === FormSubmissionOutcomes.RegistrationSuccess) {
+                session.set('username', formData.username)
+                session.set('credentialId', formData.credentialId)
+                session.unset("errorType")
+                session.unset("errorMessage")
+
+                console.log(`Set credentialId on session`, { searchParams: url.searchParams.toString() })
+            }
+            else if (formName === FormSubmissionOutcomes.SignInSuccess) {
+                session.set('signature', formData.signature)
+                session.unset("errorType")
+                session.unset("errorMessage")
+            }
+        }
+
+        return redirect(`/rating?${url.searchParams}`, {
+            headers: {
+                "Set-Cookie": await commitSession(session),
+            },
+        })
     }
 
     return null
