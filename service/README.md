@@ -2,9 +2,24 @@
 
 ## Running as container
 
-```
+```powershell
+$dbAccountUrl = $(az cosmosdb show -g wov --name wov-db --query "documentEndpoint" -o tsv)
+$dbKey = $(az cosmosdb keys list -g wov --name wov-db --query "primaryMasterKey" -o tsv)
+
 docker build -t service .
-docker run -it -p 3002:3002 service
+docker run -it --rm `
+    -p 3002:80 `
+    --name 'wov-service' `
+    -e NODE_ENV='development' `
+    -e HOST='0.0.0.0' `
+    -e PORT='80' `
+    -e DAPR_HOST='localhost' `
+    -e DAPR_HTTP_PORT='3500' `
+    -e COSMOSDB_ACCOUNT=$dbAccountUrl `
+    -e COSMOSDB_KEY=$dbKey `
+    -e COSMOSDB_DATABASE_ID='womenofvalorant' `
+    -e COSMOSDB_CONTAINER_ID='ratings' `
+    wov-service
 ```
 
 When using container host should be `0.0.0.0`, when using local host should be `localhost`
