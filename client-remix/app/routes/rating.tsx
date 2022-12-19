@@ -73,7 +73,7 @@ export const action: ActionFunction = async ({ request }) => {
     const url = new URL(request.url)
     const session = await getSession(request.headers.get("Cookie"))
 
-    console.log(formName.toUpperCase())
+    console.log({ formName })
     if (formName === FormSubmissionOutcomes.SubmitRating) {
         const ratingInput = getSubmissionFromObject(formData)
         const savedRating = await postRating(ratingInput)
