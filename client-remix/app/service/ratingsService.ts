@@ -11,16 +11,30 @@ export async function getRatings(sex: "men" | "women"): Promise<SavedSubmission[
     return json
 }
 
-export async function postRating(rating: Submission): Promise<SavedSubmission> {
-    const request = await fetch(`${apiBaseUrl}/ratings`, {
+export async function postRating(
+    rating: Submission,
+    signature: string,
+    credentialId: string,
+    publicKey: string,
+    algorithm: string,
+    authenticatorData: string,
+    clientData: string,
+): Promise<SavedSubmission> {
+    const response = await fetch(`${apiBaseUrl}/ratings`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            'x-webauthn-signature': signature,
+            'x-webauthn-credentialid': credentialId,
+            'x-webauthn-publickey': publicKey,
+            'x-webauthn-algorithm': algorithm,
+            'x-webauthn-authenticatordata': authenticatorData,
+            'x-webauthn-clientdata': clientData,
         },
         body: JSON.stringify(rating)
     })
 
-    const json = await request.json()
+    const json = await response.json()
 
     return json
 }

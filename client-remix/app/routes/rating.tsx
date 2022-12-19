@@ -76,7 +76,21 @@ export const action: ActionFunction = async ({ request }) => {
     console.log({ formName })
     if (formName === FormSubmissionOutcomes.SubmitRating) {
         const ratingInput = getSubmissionFromObject(formData)
-        const savedRating = await postRating(ratingInput)
+        const signature = session.get('signature')
+        const credentialId = session.get('credentialId')
+        const publicKey = session.get('publicKey')
+        const algorithm = session.get('algorithm')
+        const authenticatorData = session.get('authenticatorData')
+        const clientData = session.get('clientData')
+        const savedRating = await postRating(
+            ratingInput,
+            signature,
+            credentialId,
+            publicKey,
+            algorithm,
+            authenticatorData,
+            clientData,
+        )
 
         return {
             savedRating
@@ -94,6 +108,8 @@ export const action: ActionFunction = async ({ request }) => {
             if (formName === FormSubmissionOutcomes.RegistrationSuccess) {
                 session.set('username', formData.username)
                 session.set('credentialId', formData.credentialId)
+                session.set('publicKey', formData.publicKey)
+                session.set('algorithm', formData.algorithm)
                 session.unset("errorType")
                 session.unset("errorMessage")
 
@@ -101,6 +117,14 @@ export const action: ActionFunction = async ({ request }) => {
             }
             else if (formName === FormSubmissionOutcomes.SignInSuccess) {
                 session.set('signature', formData.signature)
+                const submittedCredentialId = formData.credentialId as string
+                const existingCredentialId = session.get('credentialId')
+                if (existingCredentialId !== submittedCredentialId) {
+                    throw new Error(`Submitted credential id: ${submittedCredentialId} does not equal existing credential id: ${existingCredentialId}`)
+                }
+
+                session.set('authenticatorData', formData.authenticatorData)
+                session.set('clientData', formData.clientData)
                 session.unset("errorType")
                 session.unset("errorMessage")
             }
@@ -188,13 +212,13 @@ export default function RatingRoute() {
             console.log({ registerResonse })
 
             const username = registerResonse.username
-            const credentialId = registerResonse.credential.id
 
             registrationFetcher.submit({
                 name: FormSubmissionOutcomes.RegistrationSuccess,
                 username,
-                publicKey: registerResonse.publicKey,
-                credentialId,
+                algorithm: registerResonse.credential.algorithm,
+                publicKey: registerResonse.credential.publicKey,
+                credentialId: registerResonse.credential.id,
             }, {
                 method: 'post'
             })
@@ -228,6 +252,9 @@ export default function RatingRoute() {
 
             signInFetcher.submit({
                 name: FormSubmissionOutcomes.SignInSuccess,
+                credentialId: loginResponse.credentialId,
+                authenticatorData: loginResponse.authenticatorData,
+                clientData: loginResponse.clientData,
                 signature: loginResponse.signature,
             }, {
                 method: 'post'
