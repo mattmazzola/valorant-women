@@ -39,6 +39,8 @@ export const loader: LoaderFunction = async ({ request }) => {
   return json({
     activeSex,
     ENV: {
+      PASSWORDLESS_DEV_API_KEY: process.env.PASSWORDLESS_DEV_API_KEY,
+      PASSWORDLESS_DEV_BACKEND_URL: process.env.PASSWORDLESS_DEV_BACKEND_URL,
     },
   })
 }
@@ -124,7 +126,8 @@ declare global {
     }
 
     ENV: {
-      API_KEY: string
+      PASSWORDLESS_DEV_API_KEY: string
+      PASSWORDLESS_DEV_BACKEND_URL: string
       API_URL: string
     }
   }

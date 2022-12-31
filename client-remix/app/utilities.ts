@@ -38,3 +38,7 @@ export function getFormData(data: object): Record<string, string> {
 
     return formData
 }
+
+export function isNonEmptyString(s: string | null | undefined): s is string {
+    return !(typeof s === 'string'  && s.length > 0)
+}

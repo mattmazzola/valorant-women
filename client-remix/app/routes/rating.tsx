@@ -1,6 +1,7 @@
 import * as webauthn from '@passwordless-id/webauthn'
 import { ActionFunction, json, LinksFunction, LoaderFunction, redirect } from "@remix-run/node"
 import { Link, Outlet, useFetcher, useLoaderData, useNavigate, useSearchParams } from "@remix-run/react"
+import { Client } from 'passwordless-client-js'
 import React, { useEffect } from "react"
 import Rating from "~/components/Rating"
 import ratingStyles from '~/components/Rating.css'
@@ -10,9 +11,11 @@ import toggleStyles from '~/components/Toggle.css'
 import { femaleAgents, femaleSex, maleAgents, maleSex } from "~/constants"
 import { getActiveSex, getObjectFromSubmission, getSubmissionFromObject } from "~/helpers"
 import { Submission } from "~/models"
+import * as passwordlessDevService from '~/service/passwordlessDevService'
 import { postRating } from "~/service/ratingsService"
 import { commitSession, getSession } from "~/sessions"
 import ratingIndexStyles from '~/styles/rating.css'
+import { isNonEmptyString } from '~/utilities'
 
 export const links: LinksFunction = () => [
     { rel: 'stylesheet', href: toggleStyles },
@@ -31,9 +34,8 @@ enum FormSubmissionOutcomes {
 
 type LoaderData = {
     activeSex: string
-    username?: string
-    credentialId?: string
-    signature?: string
+    userName?: string
+    token?: string
     errorType?: string
     errorMessage?: string
 }
@@ -42,18 +44,16 @@ export const loader: LoaderFunction = async ({ request }) => {
     const activeSex = await getActiveSex(request)
     const session = await getSession(request.headers.get("Cookie"))
 
-    const username = session.get('username')
-    const credentialId = session.get('credentialId')
-    const signature = session.get('signature')
+    const userName = session.get('userName')
+    const token = session.get('token')
     const errorType = session.get('errorType')
     const errorMessage = session.get('errorMessage')
 
     return json<LoaderData>(
         {
             activeSex,
-            username,
-            credentialId,
-            signature,
+            userName,
+            token,
             errorType,
             errorMessage,
         },
@@ -92,15 +92,14 @@ export const action: ActionFunction = async ({ request }) => {
         // If success, set success data based on type
         else if ([FormSubmissionOutcomes.RegistrationSuccess, FormSubmissionOutcomes.SignInSuccess].includes(formOutcome)) {
             if (formName === FormSubmissionOutcomes.RegistrationSuccess) {
-                session.set('username', formData.username)
-                session.set('credentialId', formData.credentialId)
+                session.set('userName', formData.userName)
+                session.set('token', formData.token)
                 session.unset("errorType")
                 session.unset("errorMessage")
 
-                console.log(`Set credentialId on session`, { searchParams: url.searchParams.toString() })
+                console.log(`Set token on session`, { token: formData.token, searchParams: url.searchParams.toString() })
             }
             else if (formName === FormSubmissionOutcomes.SignInSuccess) {
-                session.set('signature', formData.signature)
                 session.unset("errorType")
                 session.unset("errorMessage")
             }
@@ -121,14 +120,14 @@ export default function RatingRoute() {
     const signInFetcher = useFetcher()
     const ratingFetcher = useFetcher()
     const loaderData = useLoaderData<LoaderData>()
-    console.log({ loaderData })
-    const { activeSex, username, credentialId, signature, errorMessage, errorType } = loaderData
+    console.log({ loaderData, ENV: (globalThis as any).ENV })
+    const { activeSex, userName, token, errorMessage } = loaderData
 
     const [searchParams] = useSearchParams()
     const navigate = useNavigate()
     const [isWebAuthNAvailable, setIsWebAuthNAvailable] = React.useState(false)
     const [isLocalAuthenticator, setIsLocalAuthenticator] = React.useState(false)
-    const isRegistered = typeof credentialId === 'string'
+    const isRegistered = typeof token === 'string'
 
     useEffect(() => {
         setIsWebAuthNAvailable(webauthn.isAvailable())
@@ -178,23 +177,17 @@ export default function RatingRoute() {
     }
 
     const onClickRegister = async (userName: string) => {
-        const uuid = window.crypto.randomUUID()
-
         try {
-            const registerResonse = await webauthn.register(userName, uuid, {
-                debug: true
-            })
+            const passwordlessDevClient = new Client({ apiKey: window.ENV.PASSWORDLESS_DEV_API_KEY })
+            const token = await passwordlessDevService.getToken(window.ENV.PASSWORDLESS_DEV_BACKEND_URL, userName)
+            await passwordlessDevClient.register(token, userName)
 
-            console.log({ registerResonse })
-
-            const username = registerResonse.username
-            const credentialId = registerResonse.credential.id
+            console.log({ token, userName })
 
             registrationFetcher.submit({
                 name: FormSubmissionOutcomes.RegistrationSuccess,
-                username,
-                publicKey: registerResonse.publicKey,
-                credentialId,
+                userName,
+                token,
             }, {
                 method: 'post'
             })
@@ -213,22 +206,19 @@ export default function RatingRoute() {
     }
 
     const onClickSignIn: React.MouseEventHandler<HTMLButtonElement> = async () => {
-        const uuid = window.crypto.randomUUID()
-        const credentialIds: string[] = []
-        if (typeof credentialId === 'string') {
-            credentialIds.push(credentialId)
-        }
-
         try {
-            const loginResponse = await webauthn.login(credentialIds, uuid, {
-                debug: true,
-            })
+            if (!isNonEmptyString(loaderData.userName)) {
+                throw new Error(`loaderData.userName is not defined`)
+            }
 
-            console.log({ loginResponse })
+            const passwordlessDevClient = new Client({ apiKey: window.ENV.PASSWORDLESS_DEV_API_KEY })
+            const passwordlessDevToken = await passwordlessDevClient.signin(loaderData.userName) as string
+            console.log({ passwordlessDevToken })
+            const user = await passwordlessDevService.getUser(window.ENV.PASSWORDLESS_DEV_BACKEND_URL, passwordlessDevToken)
+            console.log({ user })
 
             signInFetcher.submit({
                 name: FormSubmissionOutcomes.SignInSuccess,
-                signature: loginResponse.signature,
             }, {
                 method: 'post'
             })
@@ -261,7 +251,7 @@ export default function RatingRoute() {
                     <b></b>
                 </div>
             </section>
-            {[username, signature].every(x => typeof x === 'string')
+            {[userName].every(x => typeof x === 'string')
                 ? (
                     <section>
                         <div className="rating-form">
@@ -270,7 +260,7 @@ export default function RatingRoute() {
                                 type="text"
                                 name="name"
                                 id="userName"
-                                value={username}
+                                value={userName}
                                 readOnly
                             />
                             <Link to={`/logout?${searchParams}`}><button type="button">Sign Out</button></Link>

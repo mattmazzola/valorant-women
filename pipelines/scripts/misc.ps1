@@ -13,6 +13,9 @@ $data = [ordered]@{
 }
 
 Write-Hash "Data" $data
+
+# Deploy container apps env
+
 az deployment group create `
   -g $resourceGroupName `
   -f ./bicep/modules/containerAppsEnv.bicep `

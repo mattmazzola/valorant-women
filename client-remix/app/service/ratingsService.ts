@@ -5,10 +5,12 @@ invariant(typeof process.env.API_URL === 'string', `env.API_URL must be a non-em
 const apiBaseUrl = process.env.API_URL
 
 export async function getRatings(sex: "men" | "women"): Promise<SavedSubmission[]> {
-    const request = await fetch(`${apiBaseUrl}/ratings?gender=${sex}`)
-    const json = await request.json()
+    // const request = await fetch(`${apiBaseUrl}/ratings?gender=${sex}`)
+    // const json = await request.json()
 
-    return json
+    // return json
+
+    return []
 }
 
 export async function postRating(rating: Submission): Promise<SavedSubmission> {
