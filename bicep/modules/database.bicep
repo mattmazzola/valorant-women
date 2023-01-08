@@ -62,12 +62,16 @@ resource container 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/container
       }
       partitionKey: {
         paths: [
-          '/id'
+          '/userId'
         ]
         kind: 'Hash'
       }
       uniqueKeyPolicy: {
-        uniqueKeys: []
+        uniqueKeys: [
+          {
+            paths: ['/userId']
+          }
+        ]
       }
       conflictResolutionPolicy: {
         mode: 'LastWriterWins'

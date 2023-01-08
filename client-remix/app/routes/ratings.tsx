@@ -1,5 +1,5 @@
 import { ActionFunction, DataFunctionArgs, json, LinksFunction } from "@remix-run/node"
-import { Form, Outlet, useFetcher, useLoaderData, useNavigate, useSearchParams } from "@remix-run/react"
+import { Form, Outlet, useFetcher, useLoaderData, useNavigate } from "@remix-run/react"
 import Rating from "~/components/Rating"
 import ratingStyles from '~/components/Rating.css'
 import ratingsStyles from '~/components/Ratings.css'
@@ -44,6 +44,7 @@ export const loader = async ({ request }: DataFunctionArgs) => {
 }
 
 export const action: ActionFunction = async ({ request }) => {
+    const profile = await auth.isAuthenticated(request)
     const rawFormData = await request.formData()
     const formData = Object.fromEntries(rawFormData)
     const formName = formData.name as string
@@ -53,7 +54,7 @@ export const action: ActionFunction = async ({ request }) => {
 
     if (formOutcome === FormSubmissionOutcomes.SubmitRating) {
         const ratingInput = getSubmissionFromObject(formData)
-        const savedRating = await postRating(ratingInput)
+        const savedRating = await postRating(ratingInput, profile?.id)
 
         return {
             savedRating
@@ -69,7 +70,6 @@ export default function RatingRoute() {
     console.log({ loaderData })
     const { profile, activeSex, error } = loaderData
 
-    const [searchParams] = useSearchParams()
     const navigate = useNavigate()
 
     const onChangeAgentType = (agentType: boolean) => {
@@ -90,6 +90,8 @@ export default function RatingRoute() {
         ratingFetcher.submit(data, { method: 'post' })
     }
 
+    const hasProfile = profile !== null && typeof profile === 'object'
+
     return (
         <>
             <section>
@@ -105,7 +107,7 @@ export default function RatingRoute() {
                     <b></b>
                 </div>
             </section>
-            {(profile !== null && typeof profile === 'object')
+            {hasProfile
                 ? (
                     <section>
                         <div className="rating-form">

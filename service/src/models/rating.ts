@@ -1,11 +1,7 @@
-import S from "fluent-schema"
+import { z } from "zod"
 import * as constants from '../constants'
 
-export type Input = {
-    isWomen: boolean
-    userName: string
-    rankedAgentNames: string[]
-}
+export type Input = z.infer<typeof InputSchema>
 
 export type Output =
     | Input
@@ -18,12 +14,11 @@ const [minList, maxList] = constants.femaleAgents.length < constants.maleAgents.
     ? [constants.femaleAgents, constants.maleAgents]
     : [constants.maleAgents, constants.femaleAgents]
 
-export const InputSchema = S.object()
-    .prop('userName', S.string().required())
-    .prop('isWomen', S.boolean().required())
-    .prop('rankedAgentNames', S.array()
-        .items(S.string())
-        .minItems(minList.length)
-        .maxItems(maxList.length)
-        .uniqueItems(true)
-        .required())
+export const InputSchema = z.object({
+    userId: z.string(),
+    isWomen: z.boolean(),
+    rankedAgentNames: z.array(z.string())
+        .min(minList.length)
+        .max(maxList.length)
+})
+

@@ -11,13 +11,17 @@ export async function getRatings(sex: "men" | "women"): Promise<SavedSubmission[
     return json
 }
 
-export async function postRating(rating: Submission): Promise<SavedSubmission> {
+export async function postRating(rating: Submission, userId?: string): Promise<SavedSubmission> {
+    if (typeof userId !== 'string') {
+        throw new Error(`You attempted to submit a new rating but your user ID was not specified. Please try again.`)
+    }
+
     const request = await fetch(`${apiBaseUrl}/ratings`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(rating)
+        body: JSON.stringify({ ...rating, userId })
     })
 
     const json = await request.json()
