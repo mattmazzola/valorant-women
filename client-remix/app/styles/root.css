@@ -21,9 +21,10 @@ code {
 :root {
     --red-highlight: hsl(355, 100%, 64%);
     --red-highlight-disabled: hsla(355, 39%, 45%, 0.664);
-    --dark-bg: rgb(15, 25, 35);
-    --color-white-soft: rgba(255, 255, 255, 0.774);
-    --color-white: rgba(255, 255, 255, 0.986)
+    --red-shadow: hsl(0, 44%, 47%);
+    --dark-bg: hsl(210, 40%, 10%);
+    --color-white-soft: hsla(0, 0%, 100%, 0.774);
+    --color-white: hsla(0, 0%, 100%, 0.986);
 }
 
 header {
@@ -72,6 +73,7 @@ h2 {
     outline: none;
     color: rgba(255, 255, 255, 0.993);
     display: inline-block;
+    text-shadow: 0px 2px 20px var(--red-shadow);
 }
 
 .orangeButton.spaced {

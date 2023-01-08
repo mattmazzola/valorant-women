@@ -40,10 +40,11 @@
     background: transparent;
     color: var(--color-white-soft);
     padding: 0.5rem;
-
+    
     transition: color 0.5s ease-in-out;
 }
 
 .toggle button.text-white {
     color: var(--color-white);
+    text-shadow: 0px 2px 20px var(--red-shadow);
 }

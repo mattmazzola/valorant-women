@@ -1,7 +1,7 @@
-import { LoaderFunction, redirect } from "@remix-run/node"
+import { DataFunctionArgs, redirect } from "@remix-run/node"
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: DataFunctionArgs) => {
   const url = new URL(request.url)
 
-  return redirect(`rating?${url.searchParams}`)
+  return redirect(`ratings${[...url.searchParams.entries()].length > 0 ? `?${url.searchParams}` : ''}`)
 }
