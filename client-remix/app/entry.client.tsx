@@ -1,14 +1,13 @@
 import { RemixBrowser } from "@remix-run/react"
-import { startTransition, StrictMode } from "react"
+import { startTransition } from "react"
 import { hydrateRoot } from "react-dom/client"
 
 function hydrate() {
   startTransition(() => {
+    // TODO: <StrictMode /> is desired but it prevents react-dnd from working
     hydrateRoot(
       document,
-      <StrictMode>
-        <RemixBrowser />
-      </StrictMode>
+      <RemixBrowser />
     )
   })
 }
