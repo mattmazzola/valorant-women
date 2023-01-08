@@ -32,6 +32,9 @@ https://redis.io/docs/stack/get-started/install/docker/
 
 ```azcli
 az login
-az acr login
+az account set -n "375b0f6d-8ad5-412d-9e11-15d36d14dc63"
+az account show --query "name"
+az acr login --name mattmazzolaacr
+
 ./pipelines/scripts/deploy.ps1
 ```

@@ -63,9 +63,10 @@ resource containerApp 'Microsoft.App/containerapps@2022-03-01' = {
         {
           image: imageName
           name: containerName
+          // https://learn.microsoft.com/en-us/azure/container-apps/containers#configuration
           resources: {
-            cpu: any('0.25')
-            memory: '0.5Gi'
+            cpu: any('0.5')
+            memory: '1.0Gi'
           }
           env: [
             {
