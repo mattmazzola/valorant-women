@@ -9,6 +9,12 @@ services:
       - PORT=${CLIENT_PORT}
       - DAPR_HTTP_PORT=${DAPR_HTTP_PORT}
       - API_URL=http://host.docker.internal:${API_PORT}
+      - AUTH0_RETURN_TO_URL=${AUTH0_RETURN_TO_URL}
+      - AUTH0_CALLBACK_URL=${AUTH0_CALLBACK_URL}
+      - AUTH0_CLIENT_ID=${AUTH0_CLIENT_ID}
+      - AUTH0_CLIENT_SECRET=${AUTH0_CLIENT_SECRET}
+      - AUTH0_DOMAIN=${AUTH0_DOMAIN}
+      - AUTH0_LOGOUT_URL=${AUTH0_LOGOUT_URL}
     ports:
       - "${CLIENT_PORT}:${CLIENT_PORT}"
     networks:

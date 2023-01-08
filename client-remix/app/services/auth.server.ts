@@ -8,8 +8,10 @@ import {
     AUTH0_CLIENT_ID,
     AUTH0_CLIENT_SECRET,
     AUTH0_DOMAIN,
-    SECRETS
+    COOKIE_SECRET
 } from "~/constants/index.server"
+
+console.log({ COOKIE_SECRET: COOKIE_SECRET.slice(0,5) })
 
 const sessionStorage = createCookieSessionStorage({
     cookie: {
@@ -17,7 +19,7 @@ const sessionStorage = createCookieSessionStorage({
         sameSite: "lax",
         path: "/",
         httpOnly: true,
-        secrets: [SECRETS],
+        secrets: [COOKIE_SECRET],
         secure: process.env.NODE_ENV === "production"
     }
 })

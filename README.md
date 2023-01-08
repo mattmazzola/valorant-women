@@ -28,14 +28,10 @@ https://redis.io/docs/stack/get-started/install/docker/
 
 ## Deployment
 
-### Resource group creation
-
-```azcli
-az group create -l westus3 -g wov
-```
-
 ### Execute Deployment
 
 ```azcli
-az deployment group create -g wov -f ./bicep/main.bicep --what-if
+az login
+az acr login
+./pipelines/scripts/deploy.ps1
 ```
