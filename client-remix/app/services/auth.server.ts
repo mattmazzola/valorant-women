@@ -11,8 +11,6 @@ import {
     COOKIE_SECRET
 } from "~/constants/index.server"
 
-console.log({ COOKIE_SECRET: COOKIE_SECRET.slice(0,5) })
-
 const sessionStorage = createCookieSessionStorage({
     cookie: {
         name: "_remix_session",

@@ -8,7 +8,7 @@ import toggleStyles from '~/components/Toggle.css'
 import { femaleAgents, femaleSex, maleAgents, maleSex } from "~/constants"
 import { getActiveSex, getObjectFromSubmission, getSubmissionFromObject } from "~/helpers"
 import { Submission } from "~/models"
-import { auth, getSession } from "~/services/auth.server"
+import { auth, commitSession, getSession } from "~/services/auth.server"
 import { postRating } from "~/services/ratingsService"
 import ratingIndexStyles from '~/styles/rating.css'
 
@@ -30,18 +30,23 @@ enum FormSubmissionOutcomes {
 
 type LoaderError = { message: string } | null
 
+const postErrorKey = 'postErrorKey'
+
 export const loader = async ({ request }: DataFunctionArgs) => {
     const activeSex = await getActiveSex(request)
     const profile = await auth.isAuthenticated(request)
     const session = await getSession(request.headers.get("Cookie"))
     const error = session.get(auth.sessionErrorKey) as LoaderError
+    const postError = session.get(postErrorKey) as string
 
     return json({
         activeSex,
         profile,
         error,
+        postError,
     })
 }
+
 
 export const action = async ({ request }: DataFunctionArgs) => {
     const profile = await auth.isAuthenticated(request)
@@ -62,10 +67,19 @@ export const action = async ({ request }: DataFunctionArgs) => {
             }
         }
         catch (e) {
-            console.error('postRating failed', { e })
-            return {
-                error: e as string
-            }
+            const message = e as string
+            console.error('postRating failed', { message })
+
+            const session = await getSession(request.headers.get("Cookie"))
+            session.flash(postErrorKey, message)
+        
+            return json({
+                error: message
+            }, {
+                headers: {
+                    'Cookie': await commitSession(session)
+                }
+            })
         }
     }
 
@@ -76,7 +90,7 @@ export default function RatingRoute() {
     const ratingFetcher = useFetcher()
     const loaderData = useLoaderData<typeof loader>()
     const actionData = useActionData<typeof action>()
-    console.log({ loaderData, actionData, ratingFetcher: ratingFetcher })
+    console.log({ loaderData, actionData, ratingFetcher })
     const { profile, activeSex, error } = loaderData
 
     const navigate = useNavigate()
