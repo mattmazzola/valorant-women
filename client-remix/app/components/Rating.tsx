@@ -36,14 +36,12 @@ const Rating: React.FC<Props> = (props) => {
 
     const onClickSubmit: React.MouseEventHandler<HTMLButtonElement> = e => {
         e.preventDefault()
-        console.log('onClickSubmit')
         const agentNames = manuallySortedAgents.map(agent => agent.id)
         const submission: Submission = {
             isWomen: props.gender === femaleSex.toLowerCase(),
             rankedAgentNames: agentNames,
         }
 
-        console.log('onClickSubmit', { submission })
         props.onSubmit(submission)
     }
 

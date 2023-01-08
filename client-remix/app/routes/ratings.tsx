@@ -1,5 +1,5 @@
-import { ActionFunction, DataFunctionArgs, json, LinksFunction } from "@remix-run/node"
-import { Form, Outlet, useFetcher, useLoaderData, useNavigate } from "@remix-run/react"
+import { DataFunctionArgs, json, LinksFunction } from "@remix-run/node"
+import { Form, Outlet, useActionData, useFetcher, useLoaderData, useNavigate } from "@remix-run/react"
 import Rating from "~/components/Rating"
 import ratingStyles from '~/components/Rating.css'
 import ratingsStyles from '~/components/Ratings.css'
@@ -43,7 +43,7 @@ export const loader = async ({ request }: DataFunctionArgs) => {
     })
 }
 
-export const action: ActionFunction = async ({ request }) => {
+export const action = async ({ request }: DataFunctionArgs) => {
     const profile = await auth.isAuthenticated(request)
     const rawFormData = await request.formData()
     const formData = Object.fromEntries(rawFormData)
@@ -54,10 +54,18 @@ export const action: ActionFunction = async ({ request }) => {
 
     if (formOutcome === FormSubmissionOutcomes.SubmitRating) {
         const ratingInput = getSubmissionFromObject(formData)
-        const savedRating = await postRating(ratingInput, profile?.id)
+        try {
+            const savedRating = await postRating(ratingInput, profile?.id)
 
-        return {
-            savedRating
+            return {
+                savedRating
+            }
+        }
+        catch (e) {
+            console.error('postRating failed', { e })
+            return {
+                error: e as string
+            }
         }
     }
 
@@ -67,7 +75,8 @@ export const action: ActionFunction = async ({ request }) => {
 export default function RatingRoute() {
     const ratingFetcher = useFetcher()
     const loaderData = useLoaderData<typeof loader>()
-    console.log({ loaderData })
+    const actionData = useActionData<typeof action>()
+    console.log({ loaderData, actionData, ratingFetcher: ratingFetcher })
     const { profile, activeSex, error } = loaderData
 
     const navigate = useNavigate()
@@ -157,6 +166,11 @@ export default function RatingRoute() {
                         </div>
                     </section>
                 )}
+            {actionData != null && typeof actionData === 'object' && (actionData as any).error && (
+                <section>
+                    Error: {(actionData as any).error}
+                </section>
+            )}
             <Outlet />
         </>
     )

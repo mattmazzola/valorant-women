@@ -1,4 +1,4 @@
-import { SqlQuerySpec } from '@azure/cosmos'
+import { ErrorResponse, SqlQuerySpec } from '@azure/cosmos'
 import * as fastify from 'fastify'
 import { v4 as uuidV4 } from 'uuid'
 import * as constants from '../constants'
@@ -68,11 +68,25 @@ const plugin: fastify.FastifyPluginCallback = (fastify, pluginOptions, done) => 
                 createdAtMs: Date.now()
             }
 
-            const savedRating = await fastify.cosmosContainer.items.create(rating);
+            try {
+                const savedRating = await fastify.cosmosContainer.items.create(rating)
 
-            console.log('Saved rating', { savedRating })
+                console.log('Saved rating', { savedRating })
 
-            return savedRating.resource
+                return savedRating.resource
+            }
+            catch (e) {
+                const cosmosError: ErrorResponse = e as any
+
+                if (cosmosError.code === 409) {
+                    rep.status(409)
+                    
+                    return { message: `You attempted to create rating with user id: ${ratingInput.userId}. The creation failed due to conflict because user has already created a rating.` }
+                }
+                else {
+                    throw e
+                }
+            }
         })
 
     done()

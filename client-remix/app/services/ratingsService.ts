@@ -1,14 +1,16 @@
 import invariant from "tiny-invariant"
+import wretch from "wretch"
 import { SavedSubmission, Submission } from "~/models"
 
 invariant(typeof process.env.API_URL === 'string', `env.API_URL must be a non-empty string`)
 const apiBaseUrl = process.env.API_URL
 
-export async function getRatings(sex: "men" | "women"): Promise<SavedSubmission[]> {
-    const request = await fetch(`${apiBaseUrl}/ratings?gender=${sex}`)
-    const json = await request.json()
+export async function getRatings(sex: "men" | "women") {
+    const rating = await wretch(`${apiBaseUrl}/ratings?gender=${sex}`)
+        .get()
+        .json<SavedSubmission[]>()
 
-    return json
+    return rating
 }
 
 export async function postRating(rating: Submission, userId?: string): Promise<SavedSubmission> {
@@ -25,6 +27,9 @@ export async function postRating(rating: Submission, userId?: string): Promise<S
     })
 
     const json = await request.json()
+    if (!request.ok) {
+        throw json.message
+    }
 
     return json
 }
