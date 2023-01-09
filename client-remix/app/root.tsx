@@ -30,16 +30,13 @@ export const links: LinksFunction = () => [
 
 type LoaderData = {
   activeSex: string
-  ENV: Record<string, string>
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
   const activeSex = await getActiveSex(request)
 
   return json({
-    activeSex,
-    ENV: {
-    },
+    activeSex
   })
 }
 
@@ -87,7 +84,7 @@ export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
 }
 
 export default function App() {
-  const { activeSex, ENV } = useLoaderData<LoaderData>()
+  const { activeSex } = useLoaderData<LoaderData>()
 
   return (
     <html lang="en">
@@ -104,28 +101,9 @@ export default function App() {
           <Outlet />
         </div>
         <ScrollRestoration />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `window.ENV = ${JSON.stringify(ENV)}`,
-          }}
-        />
-        <script src="https://cdn.passwordless.dev/dist/0.2.0/passwordless.iife.js" crossOrigin="anonymous" ></script>
         <Scripts />
         <LiveReload />
       </body>
     </html>
   )
-}
-
-declare global {
-  interface Window {
-    Passwordless: {
-      Client: Function
-    }
-
-    ENV: {
-      API_KEY: string
-      API_URL: string
-    }
-  }
 }
