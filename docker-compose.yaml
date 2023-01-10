@@ -15,6 +15,7 @@ services:
       - AUTH0_CLIENT_SECRET=${AUTH0_CLIENT_SECRET}
       - AUTH0_DOMAIN=${AUTH0_DOMAIN}
       - AUTH0_LOGOUT_URL=${AUTH0_LOGOUT_URL}
+      - COOKIE_SECRET=${COOKIE_SECRET}
     ports:
       - "${CLIENT_PORT}:${CLIENT_PORT}"
     networks:
@@ -28,6 +29,8 @@ services:
       "-dapr-http-port", "${DAPR_HTTP_PORT}",
       "-log-level", "debug",
       "-components-path", "./components"]
+    depends_on:
+      - client
 
   api:
     build:
@@ -60,7 +63,6 @@ services:
         - "./secrets/:/secrets"
     depends_on:
       - api
-    network_mode: "service:api"
 
 networks:
   valorantnetwork:
