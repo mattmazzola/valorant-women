@@ -90,7 +90,7 @@ export default function RatingRoute() {
     const ratingFetcher = useFetcher()
     const loaderData = useLoaderData<typeof loader>()
     const actionData = useActionData<typeof action>()
-    console.log({ loaderData, actionData, ratingFetcher })
+    console.log({ loaderData, actionData })
     const { profile, activeSex, error } = loaderData
 
     const navigate = useNavigate()

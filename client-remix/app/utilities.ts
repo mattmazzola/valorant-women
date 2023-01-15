@@ -15,7 +15,6 @@ export function shuffle<T>(xs: T[]): T[] {
     return shuffled
 }
 
-// TODO: Another function which transforms back into original object?
 export function getFormData(data: object): Record<string, string> {
     const formData: Record<string, string> = {}
 

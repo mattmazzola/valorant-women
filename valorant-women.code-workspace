@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "client-remix"
+		},
+		{
+			"path": "../shared-resources"
+		}
+	],
+	"settings": {
+		"powershell.cwd": "c:\\repos\\schultz-tables",
+		"dotenv.enableAutocloaking": true
+	}
+}
