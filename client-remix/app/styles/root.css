@@ -19,12 +19,12 @@ code {
 }
 
 :root {
-    --red-highlight: hsl(355, 100%, 64%);
-    --red-highlight-disabled: hsla(355, 39%, 45%, 0.664);
-    --red-shadow: hsl(0, 44%, 47%);
-    --dark-bg: hsl(210, 40%, 10%);
-    --color-white-soft: hsla(0, 0%, 100%, 0.774);
-    --color-white: hsla(0, 0%, 100%, 0.986);
+    --red-highlight: hsl(355deg 100% 64%);
+    --red-highlight-disabled: hsla(355deg 39% 45% / 0.664);
+    --red-shadow: hsl(0deg 42% 17%);
+    --dark-bg: hsl(210deg 40% 10%);
+    --color-white-soft: hsla(0deg 0% 100% / 0.774);
+    --color-white: hsla(0deg 0% 100% / 0.986);
 }
 
 header {
