@@ -12,7 +12,12 @@ param auth0ClientId string
 @secure()
 param auth0ClientSecret string
 param auth0Domain string
-param auth0Logout string
+param auth0LogoutUrl string
+
+param auth0managementClientId string
+@secure()
+param auth0managementClientSecret string
+
 @secure()
 param cookieSecret string
 
@@ -23,6 +28,7 @@ param registryPassword string
 
 var registryPasswordName = 'container-registry-password'
 var auth0clientSecretName = 'auth0-client-secret'
+var auth0managementClientSecretName = 'auth0-management-client-secret'
 var cookieSecretName = 'cookie-secret'
 
 resource containerApp 'Microsoft.App/containerapps@2022-03-01' = {
@@ -51,6 +57,10 @@ resource containerApp 'Microsoft.App/containerapps@2022-03-01' = {
         {
           name: auth0clientSecretName
           value: auth0ClientSecret
+        }
+        {
+          name: auth0managementClientSecretName
+          value: auth0managementClientSecret
         }
         {
           name: cookieSecretName
@@ -95,7 +105,15 @@ resource containerApp 'Microsoft.App/containerapps@2022-03-01' = {
             }
             {
               name: 'AUTH0_LOGOUT_URL'
-              value: auth0Logout
+              value: auth0LogoutUrl
+            }
+            {
+              name: 'AUTH0_MANAGEMENT_APP_CLIENT_ID'
+              value: auth0managementClientId
+            }
+            {
+              name: 'AUTH0_MANAGEMENT_APP_CLIENT_SECRET'
+              secretRef: auth0managementClientSecretName
             }
             {
               name: 'COOKIE_SECRET'

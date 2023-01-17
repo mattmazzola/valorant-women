@@ -22,7 +22,7 @@ const Component: React.FC<Props> = (props) => {
             id: submission.id,
             isWomen: submission.isWomen,
             userId: submission.userId,
-            userName: submission.userName,
+            user: submission.user,
             createdAtMs: submission.createdAtMs,
             rankedAgents: chosenAgentList,
         }
@@ -56,7 +56,7 @@ const Component: React.FC<Props> = (props) => {
             {resolveSubmissions.map((resolvedSubmission, i) => {
                 return (
                     <React.Fragment key={i}>
-                        <div>{resolvedSubmission.userName}</div>
+                        <div>{resolvedSubmission.user.nickname ?? resolvedSubmission.user.name}</div>
                         <div>{new Date(resolvedSubmission.createdAtMs).toLocaleDateString('en-us', datetimeOptions)}</div>
                         {resolvedSubmission.rankedAgents.map(agent => (
                             <div key={agent.id}>{agent.name}</div>

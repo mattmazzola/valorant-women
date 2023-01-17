@@ -1,3 +1,4 @@
+import { UserData } from "auth0"
 
 export type Submission = {
     isWomen: boolean
@@ -9,7 +10,7 @@ export type SavedSubmission =
     & {
         id: number
         userId: string
-        userName: string
+        user: UserData
         createdAtMs: string
     }
 

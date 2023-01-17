@@ -5,6 +5,7 @@ import StaticRatings from '~/components/StaticRatings'
 import { femaleAgents } from '~/constants'
 import { getAgentNamesSortedByRating } from "~/helpers"
 import { SavedSubmission } from '~/models'
+import { managementClient } from "~/services/auth0management.server"
 import { getRatings } from "~/services/ratingsService"
 
 type LoaderData = {
@@ -12,8 +13,15 @@ type LoaderData = {
 }
 
 export const loader: LoaderFunction = async () => {
+    const users = await managementClient.getUsers()
     const women = await getRatings("women")
     const submissions = women
+    for (const submission of submissions) {
+        const user = users.find(u => u.user_id === submission.userId)
+        if (user) {
+            submission.user = user
+        }
+    }
 
     return {
         submissions,

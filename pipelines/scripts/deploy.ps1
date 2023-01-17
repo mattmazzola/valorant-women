@@ -20,6 +20,8 @@ $auth0ClientId = Get-EnvVarFromFile -envFilePath $envFilePath -variableName 'AUT
 $auth0ClientSecret = Get-EnvVarFromFile -envFilePath $envFilePath -variableName 'AUTH0_CLIENT_SECRET'
 $auth0Domain = Get-EnvVarFromFile -envFilePath $envFilePath -variableName 'AUTH0_DOMAIN'
 $auth0LogoutUrl = Get-EnvVarFromFile -envFilePath $envFilePath -variableName 'AUTH0_LOGOUT_URL'
+$auth0ManagementClientId = Get-EnvVarFromFile -envFilePath $envFilePath -variableName 'AUTH0_MANAGEMENT_APP_CLIENT_ID'
+$auth0ManagementClientSecret = Get-EnvVarFromFile -envFilePath $envFilePath -variableName 'AUTH0_MANAGEMENT_APP_CLIENT_SECRET'
 $cookieSecret = Get-EnvVarFromFile -envFilePath $envFilePath -variableName 'COOKIE_SECRET'
 
 Write-Step "Fetch params from Azure"
@@ -48,6 +50,9 @@ $data = [ordered]@{
   "auth0ClientSecret"          = "$($auth0ClientSecret.Substring(0, 5))..."
   "auth0Domain"                = $auth0Domain
   "auth0LogoutUrl"             = $auth0LogoutUrl
+  "auth0ManagementClientId"     = $auth0ManagementClientId
+  "auth0ManagementClientSecret" = "$($auth0ManagementClientSecret.Substring(0, 5))..."
+
   "cookieSecret"               = "$($cookieSecret.Substring(0, 5))..."
 
   "dbAccountUrl"               = $dbAccountUrl
@@ -109,7 +114,9 @@ $clientFqdn = $(az deployment group create `
     auth0ClientId=$auth0ClientId `
     auth0ClientSecret=$auth0ClientSecret `
     auth0Domain=$auth0Domain `
-    auth0Logout=$auth0LogoutUrl `
+    auth0LogoutUrl=$auth0LogoutUrl `
+    auth0managementClientId=$auth0managementClientId `
+    auth0managementClientSecret=$auth0managementClientSecret `
     cookieSecret=$cookieSecret `
     --query "properties.outputs.fqdn.value" `
     -o tsv)
