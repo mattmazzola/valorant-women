@@ -38,3 +38,9 @@ az acr login --name mattmazzolaacr
 
 ./pipelines/scripts/deploy.ps1
 ```
+
+### Troubleshoot Error
+
+```
+upstream connect error or disconnect/reset before headers. retried and the latest reset reason: connection failure, transport failure reason: delayed connect error: 111
+```
