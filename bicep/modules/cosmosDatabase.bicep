@@ -1,30 +1,8 @@
-param name string = '${resourceGroup().name}-db'
-param location string = 'West US'
+resource databaseAccount 'Microsoft.DocumentDB/databaseAccounts@2022-08-15' existing = {
+  name: 'shared-klgoyi-cosmos'
+}
+
 param databaseName string = 'valorantwomen'
-param containerName string = 'ratings'
-param keyVaultName string
-
-resource databaseAccount 'Microsoft.DocumentDB/databaseAccounts@2022-08-15' = {
-  name: name
-  location: location
-  properties: {
-    databaseAccountOfferType: 'Standard'
-    locations: [
-      {
-        locationName: location
-      }
-    ]
-  }
-}
-
-var databaseKeySecretName = '${resourceGroup().name}-db-key'
-
-resource databaseKey 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
-  name: '${keyVaultName}/${databaseKeySecretName}'
-  properties: {
-    value: databaseAccount.listKeys().primaryMasterKey
-  }
-}
 
 resource sqlDatabase 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2022-08-15' = {
   parent: databaseAccount
@@ -36,9 +14,7 @@ resource sqlDatabase 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2022-08
   }
 }
 
-output accountKeySecretName string = databaseKeySecretName
-output accountName string = databaseAccount.name
-output databaseName string = sqlDatabase.name
+param containerName string = 'ratings'
 
 resource container 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2022-08-15' = {
   parent: sqlDatabase
@@ -80,3 +56,8 @@ resource container 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/container
     }
   }
 }
+
+
+output accountName string = databaseAccount.name
+output databaseName string = sqlDatabase.name
+output containerName string = container.name

@@ -1,7 +1,6 @@
 $resourceGroupName = "wov"
-$resourceGroupLocation = "westus3"
 
-Import-Module "$PSScriptRoot/common.psm1" -Force
+Import-Module "C:/repos/shared-resources/pipelines/scripts/common.psm1" -Force
 
 Write-Step "Query params from Azure"
 $logAnalyticsCustomerId = $(az containerapp env show -g $resourceGroupName -n wov-containerappsenv --query "properties.appLogsConfiguration.logAnalyticsConfiguration.customerId" -o tsv)

@@ -1,25 +1,17 @@
 $resourceGroupName = "wov"
-$resourceGroupLocation = "westus3"
 
-Import-Module "$PSScriptRoot/common.psm1" -Force
-
-Write-Step "Get ENV Vars from file"
+Import-Module "C:/repos/shared-resources/pipelines/scripts/common.psm1" -Force
 
 $envFilePath = $(Resolve-Path "$PSScriptRoot/../../.env").Path
-$auth0ReturnToUrlMatch = $(Get-Content $envFilePath | Select-String -Pattern 'AUTH0_RETURN_TO_URL=(.+)')
-$auth0ReturnToUrl = $auth0ReturnToUrlMatch.Matches[0].Groups[1].Value
-$auth0CallbackUrlMatch = $(Get-Content $envFilePath | Select-String -Pattern 'AUTH0_CALLBACK_URL=(.+)')
-$auth0CallbackUrl = $auth0CallbackUrlMatch.Matches[0].Groups[1].Value
-$auth0ClientIdMatch = $(Get-Content $envFilePath | Select-String -Pattern 'AUTH0_CLIENT_ID=(.+)')
-$auth0ClientId = $auth0ClientIdMatch.Matches[0].Groups[1].Value
-$auth0ClientSecretMatch = $(Get-Content $envFilePath | Select-String -Pattern 'AUTH0_CLIENT_SECRET=(.+)')
-$auth0ClientSecret = $auth0ClientSecretMatch.Matches[0].Groups[1].Value
-$auth0DomainMatch = $(Get-Content $envFilePath | Select-String -Pattern 'AUTH0_DOMAIN=(.+)')
-$auth0Domain = $auth0DomainMatch.Matches[0].Groups[1].Value
-$auth0LogoutUrlMatch = $(Get-Content $envFilePath | Select-String -Pattern 'AUTH0_LOGOUT_URL=(.+)')
-$auth0Logout = $auth0LogoutUrlMatch.Matches[0].Groups[1].Value
-$cookieSecretMatch = $(Get-Content $envFilePath | Select-String -Pattern 'COOKIE_SECRET=(.+)')
-$cookieSecret = $cookieSecretMatch.Matches[0].Groups[1].Value
+Write-Step "Get ENV Vars from $envFilePath"
+
+$auth0ReturnToUrl = Get-EnvVarFromFile -envFilePath $envFilePath -variableName 'AUTH0_RETURN_TO_URL'
+$auth0CallbackUrl = Get-EnvVarFromFile -envFilePath $envFilePath -variableName 'AUTH0_CALLBACK_URL'
+$auth0ClientId = Get-EnvVarFromFile -envFilePath $envFilePath -variableName 'AUTH0_CLIENT_ID'
+$auth0ClientSecret = Get-EnvVarFromFile -envFilePath $envFilePath -variableName 'AUTH0_CLIENT_SECRET'
+$auth0Domain = Get-EnvVarFromFile -envFilePath $envFilePath -variableName 'AUTH0_DOMAIN'
+$auth0LogoutUrl = Get-EnvVarFromFile -envFilePath $envFilePath -variableName 'AUTH0_LOGOUT_URL'
+$cookieSecret = Get-EnvVarFromFile -envFilePath $envFilePath -variableName 'COOKIE_SECRET'
 
 Write-Step "Fetch params from Azure"
 $containerAppsEnvName = 'wov-containerappsenv'
@@ -45,7 +37,7 @@ $data = [ordered]@{
   "auth0ClientId"              = $auth0ClientId
   "auth0ClientSecret"          = "$($auth0ClientSecret.Substring(0, 5))..."
   "auth0Domain"                = $auth0Domain
-  "auth0Logout"                = $auth0Logout
+  "auth0LogoutUrl"             = $auth0LogoutUrl
   "cookieSecret"               = "$($cookieSecret.Substring(0, 5))..."
 
   "apiUrl"                     = $apiUrl
@@ -77,7 +69,7 @@ $clientFqdn = $(az deployment group create `
     auth0ClientId=$auth0ClientId `
     auth0ClientSecret=$auth0ClientSecret `
     auth0Domain=$auth0Domain `
-    auth0Logout=$auth0Logout `
+    auth0Logout=$auth0LogoutUrl `
     cookieSecret=$cookieSecret `
     --query "properties.outputs.fqdn.value" `
     -o tsv)

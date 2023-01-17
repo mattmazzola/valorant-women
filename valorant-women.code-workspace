@@ -4,14 +4,11 @@
 			"path": "."
 		},
 		{
-			"path": "client-remix"
-		},
-		{
 			"path": "../shared-resources"
 		}
 	],
 	"settings": {
-		"powershell.cwd": "c:\\repos\\schultz-tables",
-		"dotenv.enableAutocloaking": true
+		"powershell.cwd": "c:\\repos\\valorant-women",
+		"dotenv.enableAutocloaking": false
 	}
 }
