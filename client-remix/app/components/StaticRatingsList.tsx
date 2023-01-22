@@ -54,7 +54,9 @@ const Component: React.FC<Props> = (props) => {
 
             <div className="line"></div>
 
-            {resolveSubmissions.map((resolvedSubmission, i) => {
+            {resolveSubmissions.length === 0
+                ? <div className="empty">No Ratings Submitted yet. Submit the first!</div>
+                : resolveSubmissions.map((resolvedSubmission, i) => {
                 return (
                     <React.Fragment key={i}>
                         <div>

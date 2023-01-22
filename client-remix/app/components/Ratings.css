@@ -26,6 +26,10 @@
     border-bottom: 2px solid var(--red-highlight);
 }
 
+.ratings .empty {
+    grid-column: 1 / -1;
+}
+
 /*
 .ratings div:nth-child(8n + 1) {
     border-left: 2px solid black;

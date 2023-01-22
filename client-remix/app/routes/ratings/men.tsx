@@ -1,7 +1,7 @@
 import { DataFunctionArgs, json } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
 import StaticRating from '~/components/StaticRating'
-import StaticRatings from '~/components/StaticRatings'
+import StaticRatingsList from '~/components/StaticRatingsList'
 import { maleAgents } from '~/constants'
 import { getAgentNamesSortedByRating } from "~/helpers"
 import { auth, commitSession, getSession } from "~/services/auth.server"
@@ -56,7 +56,7 @@ export default function RatingMen() {
             <section>
                 <h2>Individual Ratings ({submissions.length})</h2>
                 <p>Ratings by individual submissions.</p>
-                <StaticRatings
+                <StaticRatingsList
                     currentUserId={profile.id}
                     submissions={submissions}
                     agents={maleAgents}

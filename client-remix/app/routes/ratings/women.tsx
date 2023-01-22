@@ -1,7 +1,7 @@
 import { DataFunctionArgs, json } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
 import StaticRating from '~/components/StaticRating'
-import StaticRatings from '~/components/StaticRatings'
+import StaticRatingsList from '~/components/StaticRatingsList'
 import { femaleAgents } from '~/constants'
 import { getAgentNamesSortedByRating } from "~/helpers"
 import { SavedSubmission } from '~/models'
@@ -61,7 +61,7 @@ export default function RatingWomen() {
             <section>
                 <h2>Individual Ratings ({submissions.length})</h2>
                 <p>Ratings by individual submissions.</p>
-                <StaticRatings currentUserId={profile.id} submissions={submissions} agents={femaleAgents} />
+                <StaticRatingsList currentUserId={profile.id} submissions={submissions} agents={femaleAgents} />
             </section>
         </>
     )
