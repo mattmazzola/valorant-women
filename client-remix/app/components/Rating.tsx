@@ -16,6 +16,7 @@ type Props = {
     gender: "women" | "men"
     agents: Agent[]
     onSubmit: (submission: Submission) => void
+    disabled?: boolean
 }
 
 const Rating: React.FC<Props> = (props) => {
@@ -95,7 +96,12 @@ const Rating: React.FC<Props> = (props) => {
                     </Droppable>
                 </div>
             </DragDropContext>
-            <button type="button" className="orangeButton large spaced" onClick={onClickSubmit}>Submit</button>
+            <button
+                type="button"
+                className="orangeButton large spaced"
+                onClick={onClickSubmit}
+                disabled={props.disabled ?? false}
+            >Submit</button>
         </>
     )
 }

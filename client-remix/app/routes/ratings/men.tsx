@@ -29,7 +29,10 @@ export default function RatingMen() {
             <section>
                 <h2>What the People Think:</h2>
                 <p>Based on the average of all the {submissions.length} ratings this is what the people think.</p>
-                <StaticRating sortedAgentNames={avgMenRatingNames} agents={maleAgents} />
+                <StaticRating
+                    sortedAgentNames={avgMenRatingNames}
+                    agents={maleAgents}
+                />
             </section>
 
             <section>

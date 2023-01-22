@@ -10,7 +10,9 @@ export const loader: LoaderFunction = async ({ request }) => {
         
     const activeSex = await getActiveSex(request)
     
-    const childRoute = `${baseUrl}/${activeSex.toLowerCase()}${[...url.searchParams.entries()].length > 0 ? `?${url.searchParams}` : ''}`
+    const childRoute = `${baseUrl}/${activeSex.toLowerCase()}${[...url.searchParams.entries()].length > 0
+        ? `?${url.searchParams}`
+        : ''}`
 
     return redirect(childRoute)
 }

@@ -5,6 +5,7 @@ import { Agent, Resolved, SavedSubmission } from '~/models'
 type Props = {
     agents: Agent[]
     submissions: SavedSubmission[]
+    currentUserId?: string
 }
 
 const datetimeOptions: Intl.DateTimeFormatOptions = {
@@ -56,7 +57,12 @@ const Component: React.FC<Props> = (props) => {
             {resolveSubmissions.map((resolvedSubmission, i) => {
                 return (
                     <React.Fragment key={i}>
-                        <div>{resolvedSubmission.user.nickname ?? resolvedSubmission.user.name}</div>
+                        <div>
+                            {resolvedSubmission.user.nickname ?? resolvedSubmission.user.name}
+                            {typeof props.currentUserId === 'string' && props.currentUserId === resolvedSubmission.user.user_id && (
+                                ` ⭐`
+                            )}
+                        </div>
                         <div>{new Date(resolvedSubmission.createdAtMs).toLocaleDateString('en-us', datetimeOptions)}</div>
                         {resolvedSubmission.rankedAgents.map(agent => (
                             <div key={agent.id}>{agent.name}</div>
