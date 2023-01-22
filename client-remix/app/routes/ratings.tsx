@@ -31,6 +31,8 @@ enum FormSubmissionOutcomes {
 type LoaderError = { message: string } | null
 
 const postErrorKey = 'postErrorKey'
+export const hasUserSubmittedMaleRatingKey = 'hasUserSubmittedMaleRatingKey'
+export const hasUserSubmittedFemaleRatingKey = 'hasUserSubmittedFemaleRatingKey'
 
 export const loader = async ({ request }: DataFunctionArgs) => {
     const activeSex = await getActiveSex(request)
@@ -38,15 +40,18 @@ export const loader = async ({ request }: DataFunctionArgs) => {
     const session = await getSession(request.headers.get("Cookie"))
     const error = session.get(auth.sessionErrorKey) as LoaderError
     const postError = session.get(postErrorKey) as string
+    const hasUserSubmittedFemaleRating = session.get(hasUserSubmittedFemaleRatingKey) as boolean
+    const hasUserSubmittedMaleRating = session.get(hasUserSubmittedMaleRatingKey) as boolean
 
     return json({
         activeSex,
         profile,
         error,
         postError,
+        hasUserSubmittedFemaleRating,
+        hasUserSubmittedMaleRating,
     })
 }
-
 
 export const action = async ({ request }: DataFunctionArgs) => {
     const profile = await auth.isAuthenticated(request)
@@ -55,16 +60,25 @@ export const action = async ({ request }: DataFunctionArgs) => {
     const formName = formData.name as string
     const formOutcome = formName as FormSubmissionOutcomes
 
-    console.log(formName.toUpperCase())
-
     if (formOutcome === FormSubmissionOutcomes.SubmitRating) {
         const ratingInput = getSubmissionFromObject(formData)
         try {
             const savedRating = await postRating(ratingInput, profile?.id)
+            const session = await getSession(request.headers.get("Cookie"))
 
-            return {
-                savedRating
-            }
+            // TODO: Setting cookie here may be redundent since we it in loader also
+            const sexKey = ratingInput.isWomen
+                ? hasUserSubmittedFemaleRatingKey
+                : hasUserSubmittedMaleRatingKey
+            session.set(sexKey, true)
+
+            return json({
+                savedRating,
+            }, {
+                headers: {
+                    "Set-Cookie": await commitSession(session),
+                }
+            })
         }
         catch (e) {
             const message = e as string
@@ -72,7 +86,7 @@ export const action = async ({ request }: DataFunctionArgs) => {
 
             const session = await getSession(request.headers.get("Cookie"))
             session.flash(postErrorKey, message)
-        
+
             return json({
                 error: message
             }, {
@@ -91,7 +105,7 @@ export default function RatingRoute() {
     const loaderData = useLoaderData<typeof loader>()
     const actionData = useActionData<typeof action>()
     console.log({ loaderData, actionData })
-    const { profile, activeSex, error } = loaderData
+    const { profile, activeSex, error, hasUserSubmittedFemaleRating, hasUserSubmittedMaleRating } = loaderData
 
     const navigate = useNavigate()
 
@@ -148,8 +162,20 @@ export default function RatingRoute() {
                         </div>
                         <p>Drag and re-order each character into your preferred position, then submit your order!</p>
                         {activeSex === femaleSex
-                            ? <Rating onSubmit={onSubmitRating} agents={femaleAgents} gender="women" key="women" />
-                            : <Rating onSubmit={onSubmitRating} agents={maleAgents} gender="men" key="men" />}
+                            ? hasUserSubmittedFemaleRating
+                                ? (
+                                    <section>
+                                        <h2>⚠️ You have already submitted a rating! You may not submit another.</h2>
+                                    </section>
+                                )
+                                : <Rating onSubmit={onSubmitRating} agents={femaleAgents} gender="women" key="women" disabled={hasUserSubmittedFemaleRating} />
+                            : hasUserSubmittedMaleRating
+                                ? (
+                                    <section>
+                                        <h2>⚠️ You have already submitted a rating! You may not submit another.</h2>
+                                    </section>
+                                )
+                                : <Rating onSubmit={onSubmitRating} agents={maleAgents} gender="men" key="men" disabled={hasUserSubmittedMaleRating} />}
                     </section>
                 )
                 : (

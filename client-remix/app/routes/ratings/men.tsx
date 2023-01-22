@@ -1,27 +1,45 @@
-import type { LoaderFunction } from "@remix-run/node"
+import { DataFunctionArgs, json } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
 import StaticRating from '~/components/StaticRating'
 import StaticRatings from '~/components/StaticRatings'
 import { maleAgents } from '~/constants'
 import { getAgentNamesSortedByRating } from "~/helpers"
-import { SavedSubmission } from '~/models'
+import { auth, commitSession, getSession } from "~/services/auth.server"
+import { managementClient } from "~/services/auth0management.server"
 import { getRatings } from "~/services/ratingsService"
+import { hasUserSubmittedMaleRatingKey } from "../ratings"
 
-type LoaderData = {
-    submissions: SavedSubmission[]
-}
-
-export const loader: LoaderFunction = async () => {
-    const men = await getRatings("men")
-    const submissions = men
-
-    return {
-        submissions,
+export const loader = async ({ request }: DataFunctionArgs) => {
+    const users = await managementClient.getUsers()
+    const submissions = await getRatings("men")
+    for (const submission of submissions) {
+        const user = users.find(u => u.user_id === submission.userId)
+        if (user) {
+            submission.user = user
+        }
     }
+
+    const profile = await auth.isAuthenticated(request, {
+        failureRedirect: '/'
+    })
+
+    const hasUserSubmittedRating = Boolean(submissions.find(s => s.userId === profile.id))
+    const session = await getSession(request.headers.get("Cookie"))
+    session.set(hasUserSubmittedMaleRatingKey, hasUserSubmittedRating)
+
+    return json({
+        profile,
+        submissions,
+        hasUserSubmittedRating,
+    }, {
+        headers: {
+            "Set-Cookie": await commitSession(session),
+        }
+    })
 }
 
 export default function RatingMen() {
-    const { submissions } = useLoaderData() as LoaderData
+    const { profile, submissions } = useLoaderData<typeof loader>()
     const avgMenRatingNames = getAgentNamesSortedByRating(submissions, maleAgents)
 
     return (
@@ -38,7 +56,11 @@ export default function RatingMen() {
             <section>
                 <h2>Individual Ratings ({submissions.length})</h2>
                 <p>Ratings by individual submissions.</p>
-                <StaticRatings submissions={submissions} agents={maleAgents} />
+                <StaticRatings
+                    currentUserId={profile.id}
+                    submissions={submissions}
+                    agents={maleAgents}
+                />
             </section>
         </>
     )
