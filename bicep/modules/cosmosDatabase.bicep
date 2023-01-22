@@ -45,7 +45,10 @@ resource container 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/container
       uniqueKeyPolicy: {
         uniqueKeys: [
           {
-            paths: ['/userId']
+            paths: [
+              '/userId'
+              '/isWomen'
+            ]
           }
         ]
       }
