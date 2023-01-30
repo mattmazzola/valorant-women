@@ -3,16 +3,26 @@ $sharedRgString = 'klgoyi'
 $resourceGroupName = "wov"
 $resourceGroupLocation = "westus3"
 
+echo "PScriptRoot: $PScriptRoot"
+$repoRoot = If ('' -eq $PScriptRoot) {
+  "$PSScriptRoot/../.."
+}
+else {
+  "."
+}
+
+echo "Repo Root: $repoRoot"
+
 Import-Module "C:/repos/shared-resources/pipelines/scripts/common.psm1" -Force
 
 Write-Step "Create Resource Group: $resourceGroupName"
 az group create -l $resourceGroupLocation -g $resourceGroupName --query name -o tsv
 
 Write-Step "Provision Shared Resources"
-$mainBicepFilePath = $(Resolve-Path "$PSScriptRoot/../../bicep/main.bicep").Path
+$mainBicepFilePath = $(Resolve-Path "$repoRoot/bicep/main.bicep").Path
 az deployment group create -g $sharedResourceGroupName -f $mainBicepFilePath --query "properties.provisioningState" -o tsv
 
-$envFilePath = $(Resolve-Path "$PSScriptRoot/../../.env").Path
+$envFilePath = $(Resolve-Path "$repoRoot/.env").Path
 Write-Step "Get ENV Vars from $envFilePath"
 $auth0ReturnToUrl = Get-EnvVarFromFile -envFilePath $envFilePath -variableName 'AUTH0_RETURN_TO_URL'
 $auth0CallbackUrl = Get-EnvVarFromFile -envFilePath $envFilePath -variableName 'AUTH0_CALLBACK_URL'
@@ -76,7 +86,7 @@ docker push $serviceImageName
 # az acr build -r $registryUrl -t $serviceImageName ./service
 
 Write-Step "Deploy $serviceImageName Container App"
-$serviceBicepContainerDeploymentFilePath = "$PSScriptRoot/../../bicep/modules/serviceContainerApp.bicep"
+$serviceBicepContainerDeploymentFilePath = "$repoRoot/bicep/modules/serviceContainerApp.bicep"
 $serviceFqdn = $(az deployment group create `
     -g $resourceGroupName `
     -f $serviceBicepContainerDeploymentFilePath `
@@ -98,7 +108,7 @@ Write-Step "Build and Push $clientImageName Image"
 az acr build -r $registryUrl -t $clientImageName ./client-remix
 
 Write-Step "Deploy $clientImageName Container App"
-$clientBicepContainerDeploymentFilePath = "$PSScriptRoot/../../bicep/modules/clientContainerApp.bicep"
+$clientBicepContainerDeploymentFilePath = "$repoRoot/bicep/modules/clientContainerApp.bicep"
 $clientFqdn = $(az deployment group create `
     -g $resourceGroupName `
     -f $clientBicepContainerDeploymentFilePath `
