@@ -93,13 +93,6 @@ resource containerApp 'Microsoft.App/containerapps@2022-03-01' = {
             }
           ]
           probes: [
-            {
-              type: 'Startup'
-              httpGet: {
-                path: '/info/routes'
-                port: 80
-              }
-            }
           ]
         }
       ]
