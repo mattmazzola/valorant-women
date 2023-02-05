@@ -1,11 +1,11 @@
-resource databaseAccount 'Microsoft.DocumentDB/databaseAccounts@2022-08-15' existing = {
+resource cosmosDatabaseAccount 'Microsoft.DocumentDB/databaseAccounts@2022-08-15' existing = {
   name: 'shared-klgoyi-cosmos'
 }
 
 param databaseName string = 'valorantwomen'
 
-resource sqlDatabase 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2022-08-15' = {
-  parent: databaseAccount
+resource cosmosSqlDatabase 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2022-08-15' = {
+  parent: cosmosDatabaseAccount
   name: databaseName
   properties: {
     resource: {
@@ -16,8 +16,8 @@ resource sqlDatabase 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2022-08
 
 param containerName string = 'ratings'
 
-resource container 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2022-08-15' = {
-  parent: sqlDatabase
+resource cosmosContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2022-08-15' = {
+  parent: cosmosSqlDatabase
   name: containerName
   properties: {
     resource: {
@@ -61,6 +61,6 @@ resource container 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/container
 }
 
 
-output accountName string = databaseAccount.name
-output databaseName string = sqlDatabase.name
-output containerName string = container.name
+output accountName string = cosmosDatabaseAccount.name
+output databaseName string = cosmosSqlDatabase.name
+output containerName string = cosmosContainer.name
