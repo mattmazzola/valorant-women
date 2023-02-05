@@ -36,45 +36,41 @@ $cookieSecret = Get-EnvVarFromFile -envFilePath $envFilePath -variableName 'COOK
 
 Write-Step "Fetch params from Azure"
 $sharedResourceNames = Get-ResourceNames $sharedResourceGroupName $sharedRgString
+$sharedResourceVars = Get-SharedResourceDeploymentVars $sharedResourceGroupName $sharedRgString
 
 $dbAccountUrl = $(az cosmosdb show -g $sharedResourceGroupName --name $sharedResourceNames.cosmosDatabase --query "documentEndpoint" -o tsv)
 $dbKey = $(az cosmosdb keys list -g $sharedResourceGroupName --name $sharedResourceNames.cosmosDatabase --query "primaryMasterKey" -o tsv)
-$containerAppsEnvResourceId = $(az containerapp env show -g $sharedResourceGroupName -n $sharedResourceNames.containerAppsEnv --query "id" -o tsv)
-$acrJson = $(az acr credential show -n $sharedResourceNames.containerRegistry --query "{ username:username, password:passwords[0].value }" | ConvertFrom-Json)
-$registryUrl = $(az acr show -g $sharedResourceGroupName -n $sharedResourceNames.containerRegistry --query "loginServer" -o tsv)
-$registryUsername = $acrJson.username
-$registryPassword = $acrJson.password
 
 $serviceContainerName = "$resourceGroupName-service"
 $serviceImageTag = $(Get-Date -Format "yyyyMMddhhmm")
-$serviceImageName = "${registryUrl}/${serviceContainerName}:${serviceImageTag}"
+$serviceImageName = "$($sharedResourceVars.registryUrl)/${serviceContainerName}:${serviceImageTag}"
 
 $clientContainerName = "$resourceGroupName-client"
 $clientImageTag = $(Get-Date -Format "yyyyMMddhhmm")
-$clientImageName = "${registryUrl}/${clientContainerName}:${clientImageTag}"
+$clientImageName = "$($sharedResourceVars.registryUrl)/${clientContainerName}:${clientImageTag}"
 
 $data = [ordered]@{
-  "auth0ReturnToUrl"           = $auth0ReturnToUrl
-  "auth0CallbackUrl"           = $auth0CallbackUrl
-  "auth0ClientId"              = $auth0ClientId
-  "auth0ClientSecret"          = "$($auth0ClientSecret.Substring(0, 5))..."
-  "auth0Domain"                = $auth0Domain
-  "auth0LogoutUrl"             = $auth0LogoutUrl
+  "auth0ReturnToUrl"            = $auth0ReturnToUrl
+  "auth0CallbackUrl"            = $auth0CallbackUrl
+  "auth0ClientId"               = $auth0ClientId
+  "auth0ClientSecret"           = "$($auth0ClientSecret.Substring(0, 5))..."
+  "auth0Domain"                 = $auth0Domain
+  "auth0LogoutUrl"              = $auth0LogoutUrl
   "auth0ManagementClientId"     = $auth0ManagementClientId
   "auth0ManagementClientSecret" = "$($auth0ManagementClientSecret.Substring(0, 5))..."
 
-  "cookieSecret"               = "$($cookieSecret.Substring(0, 5))..."
+  "cookieSecret"                = "$($cookieSecret.Substring(0, 5))..."
 
-  "dbAccountUrl"               = $dbAccountUrl
-  "dbKey"                      = "$($dbKey.Substring(0, 5))..."
+  "dbAccountUrl"                = $dbAccountUrl
+  "dbKey"                       = "$($dbKey.Substring(0, 5))..."
 
-  "serviceImageName"           = $serviceImageName
-  "clientImageName"            = $clientImageName
+  "serviceImageName"            = $serviceImageName
+  "clientImageName"             = $clientImageName
 
-  "containerAppsEnvResourceId" = $containerAppsEnvResourceId
-  "registryUrl"                = $registryUrl
-  "registryUsername"           = $registryUsername
-  "registryPassword"           = "$($registryPassword.Substring(0, 5))..."
+  "containerAppsEnvResourceId"  = $($sharedResourceVars.containerAppsEnvResourceId)
+  "registryUrl"                 = $($sharedResourceVars.registryUrl)
+  "registryUsername"            = $($sharedResourceVars.registryUsername)
+  "registryPassword"            = "$($($sharedResourceVars.registryPassword).Substring(0, 5))..."
 }
 
 Write-Hash "Data" $data
@@ -90,10 +86,10 @@ $serviceBicepContainerDeploymentFilePath = "$repoRoot/bicep/modules/serviceConta
 $serviceFqdn = $(az deployment group create `
     -g $resourceGroupName `
     -f $serviceBicepContainerDeploymentFilePath `
-    -p managedEnvironmentResourceId=$containerAppsEnvResourceId `
-    registryUrl=$registryUrl `
-    registryUsername=$registryUsername `
-    registryPassword=$registryPassword `
+    -p managedEnvironmentResourceId=$($sharedResourceVars.containerAppsEnvResourceId) `
+    registryUrl=$($sharedResourceVars.registryUrl) `
+    registryUsername=$($sharedResourceVars.registryUsername) `
+    registryPassword=$($sharedResourceVars.registryPassword) `
     imageName=$serviceImageName `
     containerName=$serviceContainerName `
     databaseAccountUrl=$dbAccountUrl `
@@ -105,17 +101,17 @@ $apiUrl = "https://$serviceFqdn"
 Write-Output $apiUrl
 
 Write-Step "Build and Push $clientImageName Image"
-az acr build -r $registryUrl -t $clientImageName ./client-remix
+az acr build -r $($sharedResourceVars.registryUrl) -t $clientImageName "$repoRoot/client-remix"
 
 Write-Step "Deploy $clientImageName Container App"
 $clientBicepContainerDeploymentFilePath = "$repoRoot/bicep/modules/clientContainerApp.bicep"
 $clientFqdn = $(az deployment group create `
     -g $resourceGroupName `
     -f $clientBicepContainerDeploymentFilePath `
-    -p managedEnvironmentResourceId=$containerAppsEnvResourceId `
-    registryUrl=$registryUrl `
-    registryUsername=$registryUsername `
-    registryPassword=$registryPassword `
+    -p managedEnvironmentResourceId=$($sharedResourceVars.containerAppsEnvResourceId) `
+    registryUrl=$($sharedResourceVars.registryUrl) `
+    registryUsername=$($sharedResourceVars.registryUsername) `
+    registryPassword=$($sharedResourceVars.registryPassword) `
     imageName=$clientImageName `
     containerName=$clientContainerName `
     apiUrl=$apiUrl `
@@ -134,5 +130,6 @@ $clientFqdn = $(az deployment group create `
 $clientUrl = "https://$clientFqdn"
 Write-Output $clientUrl
 
+Write-Step "App URLs"
 Write-Output "Service URL: $apiUrl"
 Write-Output "Client URL: $clientUrl"
