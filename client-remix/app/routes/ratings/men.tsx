@@ -19,13 +19,14 @@ export const loader = async ({ request }: DataFunctionArgs) => {
         }
     }
 
-    const profile = await auth.isAuthenticated(request, {
-        failureRedirect: '/'
-    })
-
-    const hasUserSubmittedRating = Boolean(submissions.find(s => s.userId === profile.id))
+    const profile = await auth.isAuthenticated(request)
     const session = await getSession(request.headers.get("Cookie"))
-    session.set(hasUserSubmittedMaleRatingKey, hasUserSubmittedRating)
+    
+    let hasUserSubmittedRating = true
+    if (profile) {
+        hasUserSubmittedRating = Boolean(submissions.find(s => s.userId === profile.id))
+        session.set(hasUserSubmittedMaleRatingKey, hasUserSubmittedRating)
+    }
 
     return json({
         profile,
@@ -57,7 +58,7 @@ export default function RatingMen() {
                 <h2>Individual Ratings ({submissions.length})</h2>
                 <p>Ratings by individual submissions.</p>
                 <StaticRatingsList
-                    currentUserId={profile.id}
+                    currentUserId={profile?.id}
                     submissions={submissions}
                     agents={maleAgents}
                 />

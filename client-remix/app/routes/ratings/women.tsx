@@ -4,15 +4,10 @@ import StaticRating from '~/components/StaticRating'
 import StaticRatingsList from '~/components/StaticRatingsList'
 import { femaleAgents } from '~/constants'
 import { getAgentNamesSortedByRating } from "~/helpers"
-import { SavedSubmission } from '~/models'
 import { auth, commitSession, getSession } from "~/services/auth.server"
 import { managementClient } from "~/services/auth0management.server"
 import { getRatings } from "~/services/ratingsService"
 import { hasUserSubmittedFemaleRatingKey } from "../ratings"
-
-type LoaderData = {
-    submissions: SavedSubmission[]
-}
 
 export const loader = async ({ request }: DataFunctionArgs) => {
     const users = await managementClient.getUsers()
@@ -24,13 +19,14 @@ export const loader = async ({ request }: DataFunctionArgs) => {
         }
     }
 
-    const profile = await auth.isAuthenticated(request, {
-        failureRedirect: '/'
-    })
-
-    const hasUserSubmittedRating = Boolean(submissions.find(s => s.userId === profile.id))
+    const profile = await auth.isAuthenticated(request)
     const session = await getSession(request.headers.get("Cookie"))
-    session.set(hasUserSubmittedFemaleRatingKey, hasUserSubmittedRating)
+    
+    let hasUserSubmittedRating = true
+    if (profile) {
+        hasUserSubmittedRating = Boolean(submissions.find(s => s.userId === profile.id))
+        session.set(hasUserSubmittedFemaleRatingKey, hasUserSubmittedRating)
+    }
 
     return json({
         profile,
@@ -61,7 +57,11 @@ export default function RatingWomen() {
             <section>
                 <h2>Individual Ratings ({submissions.length})</h2>
                 <p>Ratings by individual submissions.</p>
-                <StaticRatingsList currentUserId={profile.id} submissions={submissions} agents={femaleAgents} />
+                <StaticRatingsList
+                    currentUserId={profile?.id}
+                    submissions={submissions}
+                    agents={femaleAgents}
+                />
             </section>
         </>
     )
