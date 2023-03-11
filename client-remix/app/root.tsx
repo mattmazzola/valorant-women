@@ -1,4 +1,4 @@
-import { ErrorBoundaryComponent, json, LinksFunction, LoaderFunction, MetaFunction } from "@remix-run/node"
+import { DataFunctionArgs, ErrorBoundaryComponent, json, LinksFunction, MetaFunction } from "@remix-run/node"
 import {
   Link,
   Links,
@@ -28,11 +28,7 @@ export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: rootStyles },
 ]
 
-type LoaderData = {
-  activeSex: string
-}
-
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: DataFunctionArgs) => {
   const activeSex = await getActiveSex(request)
 
   return json({
@@ -84,7 +80,7 @@ export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
 }
 
 export default function App() {
-  const { activeSex } = useLoaderData<LoaderData>()
+  const { activeSex } = useLoaderData<typeof loader>()
 
   return (
     <html lang="en">
