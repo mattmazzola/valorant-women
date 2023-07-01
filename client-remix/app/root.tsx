@@ -1,5 +1,5 @@
 import { cssBundleHref } from "@remix-run/css-bundle"
-import { ErrorBoundaryComponent, LinksFunction, LoaderArgs, MetaFunction, json } from "@remix-run/node"
+import { ErrorBoundaryComponent, LinksFunction, LoaderArgs, V2_MetaFunction, json } from "@remix-run/node"
 import {
   Link,
   Links,
@@ -19,18 +19,20 @@ import { CatchBoundaryComponent } from "@remix-run/react/dist/routeModules"
 import { getActiveSex } from "~/helpers"
 import rootStyles from "./styles/root.css"
 
-export const meta: MetaFunction = () => ({
-  charset: "utf-8",
-  title: "Women of Valorant",
-  viewport: "width=device-width,initial-scale=1",
-  description: "Rank the characters of Valorant",
-  icon: "/favicon.ico",
-})
+export const meta: V2_MetaFunction = () => {
+  return [
+    { charset: "utf-8" },
+    { viewport: "width=device-width,initial-scale=1" },
+    { icon: "/favicon.ico" },
+    { title: "Women of Valorant" },
+    { name: "description", content: "Rank the characters of Valorant" },
+  ]
+}
 
 export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
-  { rel: 'manifest', href: 'manifest.json' },
-  { rel: 'apple-touch-icon', href: 'logo.jpg' },
+  { rel: 'manifest', href: '/manifest.json' },
+  { rel: 'apple-touch-icon', href: '/logo.jpg' },
   { rel: 'stylesheet', href: rootStyles },
 ]
 

@@ -1,15 +1,15 @@
-import { useUser } from '@clerk/remix'
-import { createClerkClient } from '@clerk/remix/api.server'
+import { useUser } from "@clerk/remix"
+import { createClerkClient } from "@clerk/remix/api.server"
 import { getAuth } from "@clerk/remix/ssr.server"
 import { LoaderArgs, json } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
 import StaticRating from '~/components/StaticRating'
 import StaticRatingsList from '~/components/StaticRatingsList'
-import { maleAgents } from '~/constants'
+import { femaleAgents } from '~/constants'
 import { getAgentNamesSortedByRating } from "~/helpers"
 import { commitSession, getSession } from "~/services/auth.server"
 import { getRatings } from "~/services/ratingsService"
-import { hasUserSubmittedMaleRatingKey } from "../ratings"
+import { hasUserSubmittedFemaleRatingKey } from "./ratings"
 
 export const loader = async (args: LoaderArgs) => {
   const { userId } = await getAuth(args)
@@ -17,7 +17,7 @@ export const loader = async (args: LoaderArgs) => {
     secretKey: process.env.CLERK_SECRET_KEY
   })
   const users = await clerkClient.users.getUserList()
-  const submissions = await getRatings("men")
+  const submissions = await getRatings("women")
   for (const submission of submissions) {
     const user = users.find(u => u.id === submission.userId)
     if (user) {
@@ -30,7 +30,7 @@ export const loader = async (args: LoaderArgs) => {
   let hasUserSubmittedRating = true
   if (userId) {
     hasUserSubmittedRating = Boolean(submissions.find(s => s.userId === userId))
-    session.set(hasUserSubmittedMaleRatingKey, hasUserSubmittedRating)
+    session.set(hasUserSubmittedFemaleRatingKey, hasUserSubmittedRating)
   }
 
   return json({
@@ -43,10 +43,10 @@ export const loader = async (args: LoaderArgs) => {
   })
 }
 
-export default function RatingMen() {
+export default function RatingWomen() {
   const { submissions } = useLoaderData<typeof loader>()
   const { user } = useUser()
-  const avgMenRatingNames = getAgentNamesSortedByRating(submissions, maleAgents)
+  const avgWomenRatingNames = getAgentNamesSortedByRating(submissions, femaleAgents)
 
   return (
     <>
@@ -54,8 +54,8 @@ export default function RatingMen() {
         <h2>What the People Think:</h2>
         <p>Based on the average of all the {submissions.length} ratings this is what the people think.</p>
         <StaticRating
-          sortedAgentNames={avgMenRatingNames}
-          agents={maleAgents}
+          sortedAgentNames={avgWomenRatingNames}
+          agents={femaleAgents}
         />
       </section>
 
@@ -65,7 +65,7 @@ export default function RatingMen() {
         <StaticRatingsList
           currentUserId={user?.id}
           submissions={submissions as any[]}
-          agents={maleAgents}
+          agents={femaleAgents}
         />
       </section>
     </>
