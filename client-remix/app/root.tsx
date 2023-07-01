@@ -1,4 +1,4 @@
-import { DataFunctionArgs, ErrorBoundaryComponent, json, LinksFunction, MetaFunction } from "@remix-run/node"
+import { ErrorBoundaryComponent, LinksFunction, LoaderArgs, MetaFunction, json } from "@remix-run/node"
 import {
   Link,
   Links,
@@ -10,6 +10,11 @@ import {
   useCatch,
   useLoaderData
 } from "@remix-run/react"
+
+
+import { ClerkCatchBoundary } from "@clerk/remix"
+import { rootAuthLoader } from "@clerk/remix/ssr.server"
+
 import { CatchBoundaryComponent } from "@remix-run/react/dist/routeModules"
 import { getActiveSex } from "~/helpers"
 import rootStyles from "./styles/root.css"
@@ -28,15 +33,18 @@ export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: rootStyles },
 ]
 
-export const loader = async ({ request }: DataFunctionArgs) => {
-  const activeSex = await getActiveSex(request)
+export const loader = async (args: LoaderArgs) => {
+  const activeSex = await getActiveSex(args.request)
 
-  return json({
-    activeSex
-  })
+  return rootAuthLoader(
+    args,
+    () => json({ activeSex }),
+    {
+      loadUser: true,
+    })
 }
 
-export const CatchBoundary: CatchBoundaryComponent = () => {
+const CustomCatchBoundary: CatchBoundaryComponent = () => {
   const caught = useCatch()
 
   return (
@@ -53,11 +61,15 @@ export const CatchBoundary: CatchBoundaryComponent = () => {
           </h1>
           <Link to="/" className="orangeButton">Go Home</Link>
         </div>
+        <ScrollRestoration />
         <Scripts />
+        <LiveReload />
       </body>
     </html>
   )
 }
+
+export const CatchBoundary = ClerkCatchBoundary(CustomCatchBoundary)
 
 export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
   return (
@@ -74,6 +86,9 @@ export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
           <p>The stack trace is:</p>
           <pre>{error.stack}</pre>
         </div>
+        <ScrollRestoration />
+        <Scripts />
+        <LiveReload />
       </body>
     </html>
   )

@@ -5,6 +5,12 @@ module.exports = {
   // assetsBuildDirectory: "public/build",
   // serverBuildPath: "build/index.js",
   // publicPath: "/build/",
-
-  serverDependenciesToBundle: ["@passwordless-id/webauthn"],
+  serverModuleFormat: "cjs",
+  future: {
+    v2_errorBoundary: false,
+    v2_headers: true,
+    v2_meta: true,
+    v2_normalizeFormMethod: true,
+    v2_routeConvention: false,
+  },
 };

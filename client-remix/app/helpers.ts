@@ -15,7 +15,7 @@ export function convertNamesToAgents(agentNames: string[], agents: Agent[]): Age
     return chosenAgentList
 }
 
-export function getAgentNamesSortedByRating(submissions: SavedSubmission[], agents: Agent[]): string[] {
+export function getAgentNamesSortedByRating(submissions: Omit<SavedSubmission, 'user'>[], agents: Agent[]): string[] {
     const zeroRatings = agents.reduce<Record<string, number>>((aggregate, agent) => {
         aggregate[agent.id] = 0
         return aggregate

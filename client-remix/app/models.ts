@@ -1,4 +1,4 @@
-import { UserData } from "auth0"
+import { User as ClerkUser } from "@clerk/remix/api.server"
 
 export type Submission = {
     isWomen: boolean
@@ -10,7 +10,7 @@ export type SavedSubmission =
     & {
         id: number
         userId: string
-        user: UserData
+        user: ClerkUser
         createdAtMs: string
     }
 
