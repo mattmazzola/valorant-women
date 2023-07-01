@@ -154,8 +154,8 @@ $clientBicepContainerDeploymentFilePath = "$repoRoot/bicep/modules/clientContain
 
 if ($WhatIf -eq $True) {
   az deployment group create `
-  -g $wovResourceGroupName `
-  -f $clientBicepContainerDeploymentFilePath `
+    -g $wovResourceGroupName `
+    -f $clientBicepContainerDeploymentFilePath `
     -p managedEnvironmentResourceId=$($sharedResourceVars.containerAppsEnvResourceId) `
     registryUrl=$($sharedResourceVars.registryUrl) `
     registryUsername=$($sharedResourceVars.registryUsername) `
