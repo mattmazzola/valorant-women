@@ -55,13 +55,13 @@ const Component: React.FC<Props> = (props) => {
             <div className="line"></div>
 
             {resolveSubmissions.length === 0
-                ? <div className="empty">No Ratings Submitted yet. Submit the first!</div>
+                ? <div className="empty">No ratings submitted yet! Submit the first!</div>
                 : resolveSubmissions.map((resolvedSubmission, i) => {
                 return (
                     <React.Fragment key={i}>
                         <div>
-                            {resolvedSubmission.user.nickname ?? resolvedSubmission.user.name}
-                            {typeof props.currentUserId === 'string' && props.currentUserId === resolvedSubmission.user.user_id && (
+                            {resolvedSubmission.user.username ?? resolvedSubmission.user.firstName ?? 'Unknown User'}
+                            {typeof props.currentUserId === 'string' && props.currentUserId === resolvedSubmission.user.id && (
                                 ` ⭐`
                             )}
                         </div>

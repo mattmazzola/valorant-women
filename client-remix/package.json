@@ -4,14 +4,17 @@
   "scripts": {
     "build": "remix build",
     "dev": "remix dev",
-    "start": "remix-serve build"
+    "start": "remix-serve build",
+    "typecheck": "tsc -b"
   },
   "dependencies": {
     "@clerk/remix": "^2.6.16",
-    "@remix-run/node": "^1.7.2",
-    "@remix-run/react": "^1.7.2",
-    "@remix-run/serve": "^1.7.2",
+    "@remix-run/css-bundle": "^1.17.1",
+    "@remix-run/node": "^1.17.1",
+    "@remix-run/react": "^1.17.1",
+    "@remix-run/serve": "^1.17.1",
     "@types/uuid": "^9.0.0",
+    "isbot": "^3.6.8",
     "react": "^18.2.0",
     "react-beautiful-dnd": "^13.1.1",
     "react-dom": "^18.2.0",
@@ -20,13 +23,13 @@
     "wretch": "^2.3.1"
   },
   "devDependencies": {
-    "@remix-run/dev": "^1.7.2",
-    "@remix-run/eslint-config": "^1.7.2",
-    "@types/react": "^18.0.15",
+    "@remix-run/dev": "^1.17.1",
+    "@remix-run/eslint-config": "^1.17.1",
+    "@types/react": "^18.0.35",
     "@types/react-beautiful-dnd": "^13.0.0",
-    "@types/react-dom": "^18.0.6",
-    "eslint": "^8.23.1",
-    "typescript": "^4.7.4"
+    "@types/react-dom": "^18.0.11",
+    "eslint": "^8.38.0",
+    "typescript": "^5.0.4"
   },
   "engines": {
     "node": ">=14"

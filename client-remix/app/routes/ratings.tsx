@@ -1,7 +1,7 @@
-import { SignedIn, SignedOut, useUser } from "@clerk/remix"
+import { SignOutButton, SignedIn, SignedOut, useUser } from "@clerk/remix"
 import { getAuth } from "@clerk/remix/ssr.server"
 import { ActionArgs, LinksFunction, LoaderArgs, json } from "@remix-run/node"
-import { Form, Outlet, useActionData, useFetcher, useLoaderData, useNavigate } from "@remix-run/react"
+import { Link, Outlet, useActionData, useFetcher, useLoaderData, useNavigate } from "@remix-run/react"
 import Rating from "~/components/Rating"
 import ratingStyles from '~/components/Rating.css'
 import ratingsStyles from '~/components/Ratings.css'
@@ -157,9 +157,7 @@ export default function RatingRoute() {
               value={user?.username ?? user?.fullName ?? "Unknown User"}
               readOnly
             />
-            <Form method="post" action="/logout">
-              <button type="submit">Sign Out</button>
-            </Form>
+            <SignOutButton />
           </div>
           <p>Drag and re-order each character into your preferred position, then submit your order!</p>
           {activeSex === femaleSex
@@ -196,13 +194,10 @@ export default function RatingRoute() {
               </div>
             </header>
             <div className="registration">
-              <Form method="post" action="/auth">
-                {/* {error ? <div>{error.message}</div> : null} */}
-                <p>
-                  <button type="submit" className="login orangeButton">Sign In</button>
-                </p>
-                <div>You must sign in before you may rate the characters.</div>
-              </Form>
+              <div>
+                <Link to="/sign-in" className="login orangeButton">Sign In</Link>
+              </div>
+              <div>You must sign in before you may rate the characters.</div>
             </div>
           </div>
         </section>

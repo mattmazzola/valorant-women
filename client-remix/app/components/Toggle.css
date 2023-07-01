@@ -40,7 +40,7 @@
     background: transparent;
     color: var(--color-white-soft);
     padding: 0.5rem;
-    
+
     transition: color 0.5s ease-in-out;
 }
 

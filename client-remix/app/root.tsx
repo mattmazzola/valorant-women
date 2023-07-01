@@ -1,3 +1,4 @@
+import { cssBundleHref } from "@remix-run/css-bundle"
 import { ErrorBoundaryComponent, LinksFunction, LoaderArgs, MetaFunction, json } from "@remix-run/node"
 import {
   Link,
@@ -11,8 +12,7 @@ import {
   useLoaderData
 } from "@remix-run/react"
 
-
-import { ClerkCatchBoundary } from "@clerk/remix"
+import { ClerkApp, ClerkCatchBoundary } from "@clerk/remix"
 import { rootAuthLoader } from "@clerk/remix/ssr.server"
 
 import { CatchBoundaryComponent } from "@remix-run/react/dist/routeModules"
@@ -28,6 +28,7 @@ export const meta: MetaFunction = () => ({
 })
 
 export const links: LinksFunction = () => [
+  ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
   { rel: 'manifest', href: 'manifest.json' },
   { rel: 'apple-touch-icon', href: 'logo.jpg' },
   { rel: 'stylesheet', href: rootStyles },
@@ -71,7 +72,7 @@ const CustomCatchBoundary: CatchBoundaryComponent = () => {
 
 export const CatchBoundary = ClerkCatchBoundary(CustomCatchBoundary)
 
-export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
+export const ErrorBoundary: ErrorBoundaryComponent = ({ error }: any) => {
   return (
     <html lang="en">
       <head>
@@ -94,7 +95,7 @@ export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
   )
 }
 
-export default function App() {
+function App() {
   const { activeSex } = useLoaderData<typeof loader>()
 
   return (
@@ -118,3 +119,7 @@ export default function App() {
     </html>
   )
 }
+
+export default ClerkApp(App, {
+
+})
