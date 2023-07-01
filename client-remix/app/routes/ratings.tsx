@@ -109,7 +109,7 @@ export default function RatingRoute() {
   const actionData = useActionData<typeof action>()
   const { user } = useUser()
   const { activeSex, hasUserSubmittedFemaleRating, hasUserSubmittedMaleRating } = loaderData
-  console.log({ loaderData, actionData })
+  console.log({ loaderData, actionData, user })
 
   const navigate = useNavigate()
 

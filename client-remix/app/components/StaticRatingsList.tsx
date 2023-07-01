@@ -61,7 +61,7 @@ const Component: React.FC<Props> = (props) => {
                     <React.Fragment key={i}>
                         <div>
                             {resolvedSubmission.user?.username ?? resolvedSubmission.user?.firstName ?? 'Unknown User'}
-                            {typeof props.currentUserId === 'string' && props.currentUserId === resolvedSubmission.user.id && (
+                            {typeof props.currentUserId === 'string' && props.currentUserId === resolvedSubmission.user?.id && (
                                 ` ⭐`
                             )}
                         </div>
