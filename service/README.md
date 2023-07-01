@@ -3,10 +3,11 @@
 ## Running as container
 
 ```powershell
-$dbAccountUrl = $(az cosmosdb show -g wov --name wov-db --query "documentEndpoint" -o tsv)
-$dbKey = $(az cosmosdb keys list -g wov --name wov-db --query "primaryMasterKey" -o tsv)
+$dbAccountUrl = $(az cosmosdb show -g shared --name shared-klgoyi-cosmos --query "documentEndpoint" -o tsv)
+$dbKey = $(az cosmosdb keys list -g shared --name shared-klgoyi-cosmos --query "primaryMasterKey" -o tsv)
 
-docker build -t service .
+cd service
+docker build -t wov-service .
 docker run -it --rm `
     -p 3002:80 `
     --name 'wov-service' `
@@ -22,7 +23,7 @@ docker run -it --rm `
     wov-service
 ```
 
-When using container host should be `0.0.0.0`, when using local host should be `localhost`
+When using container, host should be `0.0.0.0`, when using local, host should be `localhost`
 
 # Listening Address
 
