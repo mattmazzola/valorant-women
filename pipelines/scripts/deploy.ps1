@@ -152,6 +152,9 @@ az acr repository show-tags --name $($sharedResourceVars.registryUrl)  --reposit
 Write-Step "Deploy $clientImageName Container App (What-If: $($WhatIf))"
 $clientBicepContainerDeploymentFilePath = "$repoRoot/bicep/modules/clientContainerApp.bicep"
 
+$apiUrl = "None: What-If Deployment"
+$clientUrl = "None: What-If Deployment"
+
 if ($WhatIf -eq $True) {
   az deployment group create `
     -g $wovResourceGroupName `
