@@ -92,3 +92,9 @@ h2 {
 .orangeButton.large {
     font-size: 3em;
 }
+
+.justify-center {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}

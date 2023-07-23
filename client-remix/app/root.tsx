@@ -1,5 +1,5 @@
 import { cssBundleHref } from "@remix-run/css-bundle"
-import { ErrorBoundaryComponent, LinksFunction, LoaderArgs, V2_MetaFunction, json } from "@remix-run/node"
+import { LinksFunction, LoaderArgs, V2_MetaFunction, json } from "@remix-run/node"
 import {
   Link,
   Links,
@@ -8,14 +8,14 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  useCatch,
-  useLoaderData
+  isRouteErrorResponse,
+  useLoaderData,
+  useRouteError
 } from "@remix-run/react"
 
-import { ClerkApp, ClerkCatchBoundary } from "@clerk/remix"
+import { ClerkApp, V2_ClerkErrorBoundary } from "@clerk/remix"
 import { rootAuthLoader } from "@clerk/remix/ssr.server"
 
-import { CatchBoundaryComponent } from "@remix-run/react/dist/routeModules"
 import { getActiveSex } from "~/helpers"
 import rootStyles from "./styles/root.css"
 
@@ -47,48 +47,43 @@ export const loader = async (args: LoaderArgs) => {
     })
 }
 
-const CustomCatchBoundary: CatchBoundaryComponent = () => {
-  const caught = useCatch()
+const CustomErrorBoundary = () => {
+  const error = useRouteError()
+  let errorName: string
+  let errorJsx: React.ReactNode
 
-  return (
-    <html>
-      <head>
-        <title>{`Women of Valorant: ${caught.status}`}</title>
-        <Meta />
-        <Links />
-      </head>
-      <body>
-        <div className="center">
-          <h1>
-            Error: {caught.status} {caught.statusText}
-          </h1>
-          <Link to="/" className="orangeButton">Go Home</Link>
-        </div>
-        <ScrollRestoration />
-        <Scripts />
-        <LiveReload />
-      </body>
-    </html>
-  )
-}
+  if (isRouteErrorResponse(error)) {
+    errorName = (error as any)?.name ?? error?.data.name
+    errorJsx = (
+      <div className="center">
+        <h1>
+          Error: {error.status} {error.statusText}
+        </h1>
+        <Link to="/" className="orangeButton">Go Home</Link>
+      </div>
+    )
+  }
+  else {
+    errorName = (error as any)?.name
+    errorJsx = (
+      <div className="center">
+        <h1>Error</h1>
+        <p>{(error as any)?.message}</p>
+        <p>The stack trace is:</p>
+        <pre>{(error as any)?.stack}</pre>
+      </div>
+    )
+  }
 
-export const CatchBoundary = ClerkCatchBoundary(CustomCatchBoundary)
-
-export const ErrorBoundary: ErrorBoundaryComponent = ({ error }: any) => {
   return (
     <html lang="en">
       <head>
-        <title>{`Women of Valorant: ${error.name}`}</title>
+        <title>{`Women of Valorant: ${errorName}`}</title>
         <Meta />
         <Links />
       </head>
       <body>
-        <div className="center">
-          <h1>Error</h1>
-          <p>{error.message}</p>
-          <p>The stack trace is:</p>
-          <pre>{error.stack}</pre>
-        </div>
+        {errorJsx}
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
@@ -96,6 +91,8 @@ export const ErrorBoundary: ErrorBoundaryComponent = ({ error }: any) => {
     </html>
   )
 }
+
+export const ErrorBoundary = V2_ClerkErrorBoundary(CustomErrorBoundary)
 
 function App() {
   const { activeSex } = useLoaderData<typeof loader>()
