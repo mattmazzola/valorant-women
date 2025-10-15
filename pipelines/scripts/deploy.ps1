@@ -10,7 +10,7 @@ else {
 
 echo "Repo Root: $repoRoot"
 
-Import-Module "C:/repos/shared-resources/pipelines/scripts/common.psm1" -Force
+Import-Module "$repoRoot/../shared-resources/pipelines/scripts/common.psm1" -Force
 
 $inputs = @{
   "WhatIf" = $WhatIf
@@ -19,7 +19,7 @@ $inputs = @{
 Write-Hash "Inputs" $inputs
 
 $sharedResourceGroupName = "shared"
-$sharedRgString = 'klgoyi'
+$sharedRgString = 'zkpwxz'
 $wovResourceGroupName = "wov"
 $wovResourceGroupLocation = "westus3"
 
@@ -48,16 +48,16 @@ $serviceImageName = "$($sharedResourceVars.registryUrl)/${serviceContainerName}:
 $clientContainerName = "$wovResourceGroupName-client"
 $clientImageTag = $(Get-Date -Format "yyyyMMddhhmm")
 $clientImageName = "$($sharedResourceVars.registryUrl)/${clientContainerName}:${clientImageTag}"
-$secrectCharRevealLength = 10
+$secretCharRevealLength = 10
 
 $data = [ordered]@{
   "clerkPublishableKey"        = $clerkPublishableKey
-  "clerkSecretKey"             = "$($clerkSecretKey.Substring(0, $secrectCharRevealLength))..."
+  "clerkSecretKey"             = "$($clerkSecretKey.Substring(0, $secretCharRevealLength))..."
 
-  "cookieSecret"               = "$($cookieSecret.Substring(0, $secrectCharRevealLength))..."
+  "cookieSecret"               = "$($cookieSecret.Substring(0, $secretCharRevealLength))..."
 
   "dbAccountUrl"               = $dbAccountUrl
-  "dbKey"                      = "$($dbKey.Substring(0, $secrectCharRevealLength))..."
+  "dbKey"                      = "$($dbKey.Substring(0, $secretCharRevealLength))..."
 
   "serviceImageName"           = $serviceImageName
   "clientImageName"            = $clientImageName
@@ -65,7 +65,7 @@ $data = [ordered]@{
   "containerAppsEnvResourceId" = $($sharedResourceVars.containerAppsEnvResourceId)
   "registryUrl"                = $($sharedResourceVars.registryUrl)
   "registryUsername"           = $($sharedResourceVars.registryUsername)
-  "registryPassword"           = "$($($sharedResourceVars.registryPassword).Substring(0, $secrectCharRevealLength))..."
+  "registryPassword"           = "$($($sharedResourceVars.registryPassword).Substring(0, $secretCharRevealLength))..."
 }
 
 Write-Hash "Data" $data
