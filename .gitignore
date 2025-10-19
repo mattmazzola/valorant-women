@@ -6,3 +6,5 @@ secrets/
 *.log
 *.env
 *.env*.local
+
+!.devcontainer/devcontainer.env
