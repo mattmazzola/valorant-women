@@ -88,6 +88,7 @@ resource containerApp 'Microsoft.App/containerapps@2024-10-02-preview' = {
       scale: {
         minReplicas: 0
         maxReplicas: 1
+        // 30 minutes
         cooldownPeriod: 1800
       }
     }

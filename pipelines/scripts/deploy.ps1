@@ -38,6 +38,25 @@ Write-Step "Fetch params from Azure"
 $sharedResourceNames = Get-ResourceNames $sharedResourceGroupName $sharedRgString
 $sharedResourceVars = Get-SharedResourceDeploymentVars $sharedResourceGroupName $sharedRgString
 
+# Authenticate to Azure Container Registry
+$registryName = $($sharedResourceVars.registryUrl).Split('.')[0]
+
+Write-Step "Login to Azure Container Registry: $registryName"
+az acr login --name $registryName
+
+if ($LASTEXITCODE -ne 0) {
+  Write-Error "Failed to authenticate to Azure Container Registry '$registryName'. Exiting early to prevent deployment failures."
+  exit 1
+}
+
+Write-Step "Verify Azure Container Registry authentication"
+az acr repository list --name $registryName --query "[0]" -o tsv | Out-Null
+
+if ($LASTEXITCODE -ne 0) {
+  Write-Error "Authentication verification failed for Azure Container Registry '$registryName'. Exiting early to prevent deployment failures."
+  exit 1
+}
+
 $dbAccountUrl = $(az cosmosdb show -g $sharedResourceGroupName --name $sharedResourceNames.cosmosDatabase --query "documentEndpoint" -o tsv)
 $dbKey = $(az cosmosdb keys list -g $sharedResourceGroupName --name $sharedResourceNames.cosmosDatabase --query "primaryMasterKey" -o tsv)
 
@@ -107,7 +126,7 @@ az acr repository show-tags --name $($sharedResourceVars.registryUrl)  --reposit
 # TODO: Investigate why using 'az acr build' does not work
 # az acr build -r $registryUrl -t $serviceImageName ./service
 
-Write-Step "Deploy $clientImageName Container App (What-If: $($WhatIf))"
+Write-Step "Deploy $serviceImageName Container App (What-If: $($WhatIf))"
 $serviceBicepContainerDeploymentFilePath = "$repoRoot/bicep/modules/serviceContainerApp.bicep"
 
 $apiUrl = "None: What-If Deployment"
