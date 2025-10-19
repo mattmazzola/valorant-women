@@ -3,8 +3,8 @@
 ## Running as container
 
 ```powershell
-$dbAccountUrl = $(az cosmosdb show -g shared --name shared-klgoyi-cosmos --query "documentEndpoint" -o tsv)
-$dbKey = $(az cosmosdb keys list -g shared --name shared-klgoyi-cosmos --query "primaryMasterKey" -o tsv)
+$dbAccountUrl = $(az cosmosdb show -g shared --name shared-zkpwxz-cosmos --query "documentEndpoint" -o tsv)
+$dbKey = $(az cosmosdb keys list -g shared --name shared-zkpwxz-cosmos --query "primaryMasterKey" -o tsv)
 
 cd service
 docker build -t wov-service .
