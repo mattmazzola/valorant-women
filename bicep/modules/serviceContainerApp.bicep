@@ -16,7 +16,7 @@ param databaseKey string
 var registryPassworldSecretName = 'container-registry-password'
 var databaseKeySecretName = 'db-key'
 
-resource containerApp 'Microsoft.App/containerapps@2022-03-01' = {
+resource containerApp 'Microsoft.App/containerapps@2024-10-02-preview' = {
   name: name
   location: location
   properties: {
@@ -99,6 +99,8 @@ resource containerApp 'Microsoft.App/containerapps@2022-03-01' = {
       scale: {
         minReplicas: 0
         maxReplicas: 1
+        // 30 minutes
+        cooldownPeriod: 1800
       }
     }
   }
