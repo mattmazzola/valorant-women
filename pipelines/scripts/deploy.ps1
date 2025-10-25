@@ -1,16 +1,31 @@
 Param([switch]$WhatIf = $True)
 
-echo "PScriptRoot: $PScriptRoot"
-$repoRoot = if ('' -eq $PScriptRoot) {
-  "$PSScriptRoot/../.."
+$scriptPath = $MyInvocation.MyCommand.Path
+$scriptDir = Split-Path $scriptPath
+
+# Find repo root by searching upward for README.md
+$currentDir = $scriptDir
+$repoRoot = $null
+while ($currentDir -and -not $repoRoot) {
+    if (Test-Path (Join-Path $currentDir "README.md")) {
+        $repoRoot = $currentDir
+    } else {
+        $currentDir = Split-Path $currentDir
+    }
 }
-else {
-  "."
+if (-not $repoRoot) {
+    throw "Could not find repo root (no README.md found in parent directories)."
 }
 
+echo "Script Path: $scriptPath"
+echo "Script Dir: $scriptDir"
 echo "Repo Root: $repoRoot"
 
-Import-Module "$repoRoot/../shared-resources/pipelines/scripts/common.psm1" -Force
+$sharedModulePath = Resolve-Path "$repoRoot/../shared-resources/pipelines/scripts/common.psm1"
+
+echo "Shared Module Path: $sharedModulePath"
+
+Import-Module $sharedModulePath -Force
 
 $inputs = @{
   "WhatIf" = $WhatIf
@@ -24,9 +39,6 @@ $wovResourceGroupName = "wov"
 $wovResourceGroupLocation = "westus3"
 
 $sharedResourceNames = Get-ResourceNames $sharedResourceGroupName $sharedRgString
-
-Write-Step "Create Resource Group: $wovResourceGroupName"
-az group create -l $wovResourceGroupLocation -g $wovResourceGroupName --query name -o tsv
 
 $envFilePath = $(Resolve-Path "$repoRoot/.env").Path
 Write-Step "Get ENV Vars from: $envFilePath"
@@ -106,8 +118,10 @@ else {
     -o tsv
 }
 
+Write-Step "Create Resource Group: $wovResourceGroupName"
+az group create -l $wovResourceGroupLocation -g $wovResourceGroupName --query name -o tsv
 
-Write-Step "Provision $schultzTablesResourceGroupName Resources (What-If: $($WhatIf))"
+Write-Step "Provision $wovResourceGroupName Resources (What-If: $($WhatIf))"
 
 Write-Step "Build $serviceImageName Image (What-If: $($WhatIf))"
 docker build -t $serviceImageName ./service
