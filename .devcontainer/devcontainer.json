@@ -1,5 +1,4 @@
 {
-    "name": "womenofvalorant",
     "image": "mcr.microsoft.com/vscode/devcontainers/base:ubuntu",
     "features": {
         "ghcr.io/devcontainers/features/azure-cli:1": {},
@@ -47,8 +46,8 @@
     "onCreateCommand": "bash ./.devcontainer/onCreateCommand.sh",
     "postCreateCommand": "bash ./.devcontainer/postCreateCommand.sh",
     "postStartCommand": "bash ./.devcontainer/postStartCommand.sh",
-    "workspaceMount": "source=${localWorkspaceFolder},target=/workspace/dummyOne/momentomori,type=bind",
-    "workspaceFolder": "/workspace/dummyOne/momentomori",
+    "workspaceMount": "source=${localWorkspaceFolder},target=/workspace/dummyOne/valorant-women,type=bind",
+    "workspaceFolder": "/workspace/dummyOne/valorant-women",
     "mounts": [
         {
             "source": "${localWorkspaceFolder}/../shared-resources",
