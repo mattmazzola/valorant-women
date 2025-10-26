@@ -34,7 +34,7 @@ $inputs = @{
 Write-Hash "Inputs" $inputs
 
 $sharedResourceGroupName = "shared"
-$sharedRgString = 'zkpwxz'
+$sharedRgString = 'klgoyi'
 $wovResourceGroupName = "wov"
 $wovResourceGroupLocation = "westus3"
 

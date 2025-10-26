@@ -1,5 +1,7 @@
+param uniqueRgString string
+
 resource cosmosDatabaseAccount 'Microsoft.DocumentDB/databaseAccounts@2022-08-15' existing = {
-  name: 'shared-zkpwxz-cosmos'
+  name: 'shared-${uniqueRgString}-cosmos'
 }
 
 param databaseName string = 'valorantwomen'
